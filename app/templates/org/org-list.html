@@ -23,7 +23,8 @@
                         <li>
                             <h2>机构类别</h2>
                             <div class="cont">
-                                <a href="?city={{ city_id }}"><span class="{% if not category %}active2{% endif %}">全部</span></a>
+                                <a href="?city={{ city_id }}"><span
+                                        class="{% if not category %}active2{% endif %}">全部</span></a>
                                 {% for ct in org_type %}
                                     <a href="?ct={{ ct.0 }}&city={{ city_id }}">
                                         <span class="{% if category==ct.0 %}active2{% endif %}">{{ ct.1 }}</span></a>
@@ -34,7 +35,8 @@
                             <h2>所在地区</h2>
                             <div class="more">更多</div>
                             <div class="cont">
-                                <a href="?ct={{ category }}"><span class="{% if not city_id %}active2{% endif %}">全部</span></a>
+                                <a href="?ct={{ category }}"><span
+                                        class="{% if not city_id %}active2{% endif %}">全部</span></a>
                                 {% for city in cities %}
                                     <a href="?city={{ city.id }}&ct={{ category }}">
                                         <span class="{% if city.id==city_id %}active2{% endif %}">{{ city.name }}</span></a>
@@ -93,19 +95,22 @@
                     <div class="pageturn">
                         <ul class="pagelist">
 
+                            <li class="long" style="display:{% if pagination.has_prev %}block{% else %}none{% endif %}">
+                                <a href="{{ url_for('org.org_list',page=pagination.page - 1,ct=category,city=city_id) }}">上一页</a></li>
 
-                            <li class="active"><a href="?page=1">1</a></li>
-
-
-                            <li><a href="?page=2" class="page">2</a></li>
-
-
-                            <li><a href="?page=3" class="page">3</a></li>
-
-
-                            <li class="long"><a href="?page=2">下一页</a></li>
-
-
+                            {% for p in pagination.iter_pages() %}
+                                {% if p %}
+                                    {% if p==pagination.page %}
+                                        <li class="active">
+                                            <a href="{{ url_for('org.org_list',page=p,ct=category,city=city_id) }}">{{ p }}</a>
+                                        </li>
+                                    {% else %}
+                                        <li><a href="{{ url_for('org.org_list',page=p,ct=category,city=city_id) }}">{{ p }}</a></li>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            <li class="long" style="display:{% if pagination.has_prev %}block{% else %}none{% endif %}">
+                                <a href="{{ url_for('org.org_list',page=pagination.page + 1,ct=category,city=city_id) }}">下一页</a></li>
                         </ul>
                     </div>
                 </div>
