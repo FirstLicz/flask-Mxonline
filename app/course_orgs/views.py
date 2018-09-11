@@ -24,6 +24,8 @@ def org_list():
     if category:
         pagination = CourseOrg.query.filter_by(category=category).paginate(
             page, per_page=current_app.config['FLASK_PER_PAGE'], error_out=False)
+
+    org_sort = CourseOrg.query.order_by(CourseOrg.students.desc())
     return render_template(
         'org/org-list.html',
         pagination=pagination,
@@ -31,4 +33,5 @@ def org_list():
         category=category,
         cities=cities,
         city_id=city_id,
+        org_sort=org_sort,
     )
