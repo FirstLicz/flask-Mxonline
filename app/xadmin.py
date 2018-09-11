@@ -71,7 +71,7 @@ class UserModelView(MyBaseModelView):
         'image': ImageUploadField(
             'Image',
             base_path=file_path,
-            relative_path='media/uploadFile/user',
+            relative_path='media/uploadFile/user/',
             thumbnail_size=(60, 60, True)),
 
     }
@@ -92,7 +92,7 @@ class TeacherModelView(MyBaseModelView):
         'image': ImageUploadField(
             'Image',
             base_path=file_path,
-            relative_path='media/uploadFile/teacher',
+            relative_path='media/uploadFile/teacher/',
             thumbnail_size=(60, 60, True)),
 
     }
@@ -135,7 +135,7 @@ class BannerModelView(MyBaseModelView):
         'image': ImageUploadField(
             'Image',
             base_path=file_path,
-            relative_path='media/uploadFile/index',
+            relative_path='media/uploadFile/index/',
             thumbnail_size=(60, 60, True)),
 
     }
@@ -158,7 +158,7 @@ class CourseModelView(MyBaseModelView):
         'image': ImageUploadField(
             'Image',
             base_path=file_path,
-            relative_path='media/uploadFile/course',
+            relative_path='media/uploadFile/course/',
             thumbnail_size=(60, 60, True)),
 
     }
@@ -187,7 +187,7 @@ class CourseOrgModelView(MyBaseModelView):
         'image': ImageUploadField(
             'Image',
             base_path=file_path,
-            relative_path='media/uploadFile/org',
+            relative_path='media/uploadFile/org/',
             thumbnail_size=(60, 60, True)),
 
     }

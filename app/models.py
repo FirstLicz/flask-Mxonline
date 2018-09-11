@@ -307,6 +307,7 @@ class CourseOrg(db.Model):
     image = db.Column(db.String(200), nullable=True, comment='机构封面图')
     click_nums = db.Column(db.Integer, default=0, comment='点击数')
     fav_nums = db.Column(db.Integer, default=0, comment='收藏数')
+    students = db.Column(db.Integer, default=0, comment='学习人数')
     category = db.Column(db.String(20), nullable=True, default='org', comment='机构类别')
     detail = db.Column(db.Text(), comment='机构介绍')
     address = db.Column(db.String(128), nullable=True, comment='地址')
