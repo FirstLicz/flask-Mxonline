@@ -296,9 +296,18 @@ class CityDict(db.Model):
 
 
 class CourseOrg(db.Model):
+    ORG_CATEGORY = (
+        ('org', '培训机构'),
+        ('colleges', '高校'),
+        ('personal', '个人')
+    )
     __tablename__ = 'course_orgs'
     id = db.Column(db.Integer, primary_key=True, unique=True, nullable=False, autoincrement=True)
     name = db.Column(db.String(128), index=True, unique=True, comment='授课机构')
+    image = db.Column(db.String(200), nullable=True, comment='机构封面图')
+    click_nums = db.Column(db.Integer, default=0, comment='点击数')
+    fav_nums = db.Column(db.Integer, default=0, comment='收藏数')
+    category = db.Column(db.String(20), nullable=True, default='org', comment='机构类别')
     detail = db.Column(db.Text(), comment='机构介绍')
     address = db.Column(db.String(128), nullable=True, comment='地址')
     city_id = db.Column(db.Integer, db.ForeignKey('cities.id'))

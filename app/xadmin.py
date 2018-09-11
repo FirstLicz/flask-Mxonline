@@ -7,6 +7,8 @@ from flask_login import current_user
 from jinja2 import Markup
 import os
 
+from .models import User, Teacher, Course, CourseOrg
+
 file_path = os.path.join(os.path.dirname(__file__), 'static')
 
 
@@ -34,7 +36,6 @@ class MyBaseModelView(ModelView):
     def inaccessible_callback(self, name, **kwargs):
         # redirect to login page if user doesn't have access
         return redirect(url_for('auth.login', next=request.url))
-
 
     def _list_thumbnail(view, context, model, name):
         if not model.image:
@@ -70,7 +71,7 @@ class UserModelView(MyBaseModelView):
         'image': ImageUploadField(
             'Image',
             base_path=file_path,
-            relative_path='media/uploadFile/',
+            relative_path='media/uploadFile/user',
             thumbnail_size=(60, 60, True)),
 
     }
@@ -91,7 +92,7 @@ class TeacherModelView(MyBaseModelView):
         'image': ImageUploadField(
             'Image',
             base_path=file_path,
-            relative_path='media/uploadFile/',
+            relative_path='media/uploadFile/teacher',
             thumbnail_size=(60, 60, True)),
 
     }
@@ -134,7 +135,7 @@ class BannerModelView(MyBaseModelView):
         'image': ImageUploadField(
             'Image',
             base_path=file_path,
-            relative_path='media/uploadFile/',
+            relative_path='media/uploadFile/index',
             thumbnail_size=(60, 60, True)),
 
     }
@@ -157,7 +158,7 @@ class CourseModelView(MyBaseModelView):
         'image': ImageUploadField(
             'Image',
             base_path=file_path,
-            relative_path='media/uploadFile/',
+            relative_path='media/uploadFile/course',
             thumbnail_size=(60, 60, True)),
 
     }
@@ -173,9 +174,26 @@ class CourseResourceModelView(MyBaseModelView):
 
 class CourseOrgModelView(MyBaseModelView):
     form_excluded_columns = ['courses', 'teachers']
+    column_choices = {
+        'category': CourseOrg.ORG_CATEGORY,
+    }
+    form_overrides = dict(
+        category=Select2Field,
+    )
+    form_args = dict(
+        category=dict(coerce=str, choices=CourseOrg.ORG_CATEGORY),
+    )
+    form_extra_fields = {
+        'image': ImageUploadField(
+            'Image',
+            base_path=file_path,
+            relative_path='media/uploadFile/org',
+            thumbnail_size=(60, 60, True)),
+
+    }
 
 
-from .models import User, Teacher, Course
+
 
 
 # 监听删除图片的
@@ -210,6 +228,21 @@ def del_image(mapper, connection, target):
 
 
 @listens_for(Course, 'after_delete')
+def del_image(mapper, connection, target):
+    if target.image:
+        # Delete image
+        try:
+            os.remove(os.path.join(file_path, target.image))
+        except OSError:
+            pass
+        # Delete thumbnail
+        try:
+            os.remove(os.path.join(file_path, thumbgen_filename(target.image)))
+        except OSError:
+            pass
+
+
+@listens_for(CourseOrg, 'after_delete')
 def del_image(mapper, connection, target):
     if target.image:
         # Delete image
