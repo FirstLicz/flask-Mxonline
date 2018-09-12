@@ -35,3 +35,21 @@ def org_list():
         city_id=city_id,
         org_sort=org_sort,
     )
+
+
+@org.route('/home/<int:org_id>')
+def org_home_page(org_id):
+    """
+        课程机构首页
+    :param org_id:  课程机构  ID
+    :return:
+    """
+    organization = CourseOrg.query.get_or_404(int(org_id))
+    courses = organization.courses[:4]
+    teachers = organization.teachers[:3]
+    return render_template(
+        'org/org-detail-homepage.html',
+        organization=organization,
+        courses=courses,
+        teachers=teachers,
+    )
