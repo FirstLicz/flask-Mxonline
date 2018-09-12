@@ -7,6 +7,7 @@ from flask_admin import Admin
 from flask_babelex import Babel
 
 from config import config
+from .template_filters import do_format_date
 
 db = SQLAlchemy()
 mail = Mail()
@@ -56,6 +57,8 @@ def create_app(config_name):
     admin.init_app(app, index_view=MyAdminIndexView())
     babel.init_app(app)
     login_manager.init_app(app)
+
+    app.add_template_filter(do_format_date, 'datetime')
 
     from .index import index as index_blueprint
     app.register_blueprint(index_blueprint)

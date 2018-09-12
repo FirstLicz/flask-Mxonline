@@ -78,6 +78,8 @@ class UserModelView(MyBaseModelView):
 
 
 class TeacherModelView(MyBaseModelView):
+    form_excluded_columns = ['courses', ]
+
     from .models import Teacher
     column_choices = {
         'profession': Teacher.PROFESSIONAL,
