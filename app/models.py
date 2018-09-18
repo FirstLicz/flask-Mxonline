@@ -190,7 +190,7 @@ class EmailVerifyCode(db.Model):
     email = db.Column(db.String(128), nullable=False, index=True, comment='发送邮箱', doc='发送邮箱')
     code = db.Column(db.String(32), nullable=False, index=True, comment='验证码', doc='验证码')
     code_type = db.Column(db.String(1), nullable=False, default='0', comment='验证码类型', doc='验证码类型')
-    send_time = db.Column(db.DateTime(), default=datetime.now, comment='发送时间', doc='发送时间')
+    add_time = db.Column(db.DateTime(), default=datetime.now, comment='发送时间', doc='发送时间')
 
     def __repr__(self):
         return "<EmailVerifyCode,%s>" % self.code
@@ -423,6 +423,31 @@ class CourseResource(db.Model):
 
     def __repr__(self):
         return "<CourseResource,%s>" % self.name
+
+    def __str__(self):
+        return self.name
+
+
+# Create models
+class File(db.Model):
+    """
+        用户富文本存储文件
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64))
+    path = db.Column(db.String(128))
+
+    def __str__(self):
+        return self.name
+
+
+class Image(db.Model):
+    """
+        用户富文本存储图片
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64))
+    path = db.Column(db.String(128))
 
     def __str__(self):
         return self.name

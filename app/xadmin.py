@@ -1,13 +1,15 @@
 from flask_admin.contrib.sqla import ModelView
-from flask_admin import AdminIndexView, expose
+from flask_admin import AdminIndexView, expose, form
 from flask_admin.form import ImageUploadField, thumbgen_filename, Select2Field
+from flask_ckeditor import CKEditorField
 from sqlalchemy.event import listens_for
 from flask import url_for, request, redirect, abort
 from flask_login import current_user
 from jinja2 import Markup
 import os
 
-from .models import User, Teacher, Course, CourseOrg
+from .models import User, Teacher, Course, CourseOrg, File, Image, EmailVerifyCode, UserFavorite
+from .admin_fields import UEditorField
 
 file_path = os.path.join(os.path.dirname(__file__), 'static')
 
@@ -46,6 +48,19 @@ class MyBaseModelView(ModelView):
         'image': _list_thumbnail
     }
 
+    """View function of Flask-Admin for Post create/edit Page includedin Models page"""
+
+    extra_js = ['//cdnjs.cloudflare.com/ajax/libs/ckeditor/4.0.1/ckeditor.js']
+    form_overrides = dict(detail=UEditorField)
+
+    # Using Add Filter box
+    column_filters = ('add_time',)
+
+    # Custom the template for PostView
+    # Using js Editor of CKeditor
+    create_template = 'xadmin/post_edit.html'
+    edit_template = 'xadmin/post_edit.html'
+
 
 class UserModelView(MyBaseModelView):
     def on_model_change(self, form, User, is_created=False):
@@ -53,7 +68,7 @@ class UserModelView(MyBaseModelView):
         User.set_password(form.password_hash.data)
 
     column_exclude_list = ['password_hash', ]
-    # column_editable_list = ['name', 'last_name']
+    # column_editable_list = ['', ]
     form_excluded_columns = ['messages', 'comments', 'password_hash']
     from .models import User
     column_choices = {
@@ -73,14 +88,12 @@ class UserModelView(MyBaseModelView):
             base_path=file_path,
             relative_path='media/uploadFile/user/',
             thumbnail_size=(60, 60, True)),
-
     }
 
 
 class TeacherModelView(MyBaseModelView):
     form_excluded_columns = ['courses', ]
 
-    from .models import Teacher
     column_choices = {
         'profession': Teacher.PROFESSIONAL,
     }
@@ -105,7 +118,6 @@ class CityModelView(MyBaseModelView):
 
 
 class UserFavoriteModelView(MyBaseModelView):
-    from .models import UserFavorite
     column_choices = {
         'fav_type': UserFavorite.FAV_TYPES,
     }
@@ -119,7 +131,6 @@ class UserFavoriteModelView(MyBaseModelView):
 
 
 class EmailVerifyCodeModelView(MyBaseModelView):
-    from .models import EmailVerifyCode
     column_choices = {
         'code_type': EmailVerifyCode.CODE_TYPES,
     }
@@ -144,7 +155,6 @@ class BannerModelView(MyBaseModelView):
 
 
 class CourseModelView(MyBaseModelView):
-    from .models import Course
     column_choices = {
         'degree': Course.COURSE_GRADE,
     }
@@ -181,6 +191,7 @@ class CourseOrgModelView(MyBaseModelView):
     }
     form_overrides = dict(
         category=Select2Field,
+        detail=UEditorField,
     )
     form_args = dict(
         category=dict(coerce=str, choices=CourseOrg.ORG_CATEGORY),
@@ -191,11 +202,7 @@ class CourseOrgModelView(MyBaseModelView):
             base_path=file_path,
             relative_path='media/uploadFile/org/',
             thumbnail_size=(60, 60, True)),
-
     }
-
-
-
 
 
 # 监听删除图片的
@@ -255,5 +262,32 @@ def del_image(mapper, connection, target):
         # Delete thumbnail
         try:
             os.remove(os.path.join(file_path, thumbgen_filename(target.image)))
+        except OSError:
+            pass
+
+
+# Delete hooks for models, delete files if models are getting deleted
+@listens_for(File, 'after_delete')
+def del_file(mapper, connection, target):
+    if target.path:
+        try:
+            os.remove(os.path.join(file_path, target.path))
+        except OSError:
+            # Don't care if was not deleted because it does not exist
+            pass
+
+
+@listens_for(Image, 'after_delete')
+def del_image(mapper, connection, target):
+    if target.path:
+        # Delete image
+        try:
+            os.remove(os.path.join(file_path, target.path))
+        except OSError:
+            pass
+
+        # Delete thumbnail
+        try:
+            os.remove(os.path.join(file_path, thumbgen_filename(target.path)))
         except OSError:
             pass

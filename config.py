@@ -14,6 +14,7 @@ class Config(object):
     FLASK_PER_PAGE = 15  # 分页，当页显示最大数据条目
     BABEL_DEFAULT_LOCALE = 'zh_CN'
     SEND_FILE_MAX_AGE_DEFAULT = timedelta(seconds=10)
+    CKEDITOR_FILE_UPLOADER = 'upload'  # 设置ckeditor 富文本上传 参数
 
     @staticmethod
     def init_app(app):
@@ -60,3 +61,4 @@ if __name__ == "__main__":
     print(Config.FLASK_MAIL_SENDER)
     print(os.getenv("MAIL_PASSWORD"))
     print(Config.FLASK_ADMIN)
+    print(basedir)
