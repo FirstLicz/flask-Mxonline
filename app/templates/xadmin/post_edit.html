@@ -19,13 +19,13 @@
         });
 
         ue.addListener("afterSelectionChange", function () {
-            var val = document.getElementById("detail");
+            var val = document.getElementById("editor_detail");
             val.innerHTML = UE.getEditor('editor').getContent();
             console.log(UE.getEditor('editor').getContent());
         });
 
         ue.addListener('ready', function (editor) {
-            var val = document.getElementById("detail");
+            var val = document.getElementById("editor_detail");
             var value =val.innerText;
             this.setContent(value);
         });
