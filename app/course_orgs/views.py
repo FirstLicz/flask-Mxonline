@@ -4,7 +4,7 @@ from io import BytesIO
 from flask import current_app
 
 from . import org
-from ..models import CourseOrg, CityDict
+from ..models import CourseOrg, CityDict, Course
 
 
 @org.route('/list/')
@@ -53,4 +53,49 @@ def org_home_page(org_id):
         organization=organization,
         courses=courses,
         teachers=teachers,
+    )
+
+
+@org.route('/course/<int:org_id>')
+def org_course_page(org_id):
+    """
+        课程机构首页
+    :param org_id:  课程机构  ID
+    :return:
+    """
+    organization = CourseOrg.query.get_or_404(int(org_id))
+    page = request.args.get('page', 1, type=int)
+    pagination = Course.query.filter_by(courseorg=organization).paginate(page, per_page=8, error_out=False)
+    return render_template(
+        'org/org-detail-course.html',
+        organization=organization,
+        pagination=pagination,
+    )
+
+
+@org.route('/detail/<int:org_id>')
+def org_detail_page(org_id):
+    """
+        课程机构首页
+    :param org_id:  课程机构  ID
+    :return:
+    """
+    organization = CourseOrg.query.get_or_404(int(org_id))
+    return render_template(
+        'org/org-detail-desc.html',
+        organization=organization,
+    )
+
+
+@org.route('/teacher/<int:org_id>')
+def org_teacher_page(org_id):
+    """
+        课程机构首页
+    :param org_id:  课程机构  ID
+    :return:
+    """
+    organization = CourseOrg.query.get_or_404(int(org_id))
+    return render_template(
+        'org/org-detail-teachers.html',
+        organization=organization,
     )

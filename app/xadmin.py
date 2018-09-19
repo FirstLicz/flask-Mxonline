@@ -162,6 +162,7 @@ class CourseModelView(MyBaseModelView):
     form_excluded_columns = ['lessions', ]
     form_overrides = dict(
         degree=Select2Field,
+        detail=UEditorField,
     )
     form_args = dict(
         degree=dict(coerce=str, choices=Course.COURSE_GRADE),

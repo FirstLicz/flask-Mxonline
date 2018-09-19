@@ -60,7 +60,7 @@
                                 <dt>
                                     <a href="{{ url_for('org.org_home_page',org_id=org.id) }}">
                                         <img width="200" height="120" class="scrollLoading"
-                                             data-url="{{ url_for('static',filename=org.image) }}"/>
+                                             data-url="{% if org.image %}{{ url_for('static',filename=org.image) }}{% else %}{% endif %}"/>
                                     </a>
                                 </dt>
                                 <dd>

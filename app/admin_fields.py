@@ -9,7 +9,7 @@ except ImportError:
 
 class UEditor(object):
     def __call__(self, field, **kwargs):
-        kwargs.setdefault('id', field.id)
+        kwargs.setdefault('id', 'editor_detail')
         if 'required' not in kwargs and 'required' in getattr(field, 'flags', []):
             kwargs['required'] = True
         kwargs['style'] = 'visibility: hidden; display: none;'
