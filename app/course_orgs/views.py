@@ -1,6 +1,5 @@
 from flask import render_template, redirect, url_for, make_response, session, request, Response
 from flask_login import login_user, logout_user, current_user, login_required
-from io import BytesIO
 from flask import current_app
 
 from . import org
