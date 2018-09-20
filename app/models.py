@@ -364,6 +364,8 @@ class Course(db.Model):
     detail = db.Column(db.Text(), nullable=True, comment='课程详情')
     degree = db.Column(db.String(3), nullable=False, default='gj', comment='课程难度')
     students = db.Column(db.Integer, default=0, comment='学习人数')
+    click_nums = db.Column(db.Integer, default=0, comment='点击数')
+    recommend = db.Column(db.Boolean, default=False, comment='是否推荐')
     fav_nums = db.Column(db.Integer, default=0, comment='收藏人数')
     image = db.Column(db.String(100), nullable=True, comment='封面图')
     learn_time = db.Column(db.Integer, default=0, comment='学习时长(默认分钟)')
@@ -375,6 +377,15 @@ class Course(db.Model):
     teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.id'), comment='课程讲师')
     add_time = db.Column(db.DateTime, default=datetime.now, comment='添加时间', doc='添加时间')
     lessions = db.relationship('Lession', backref='course')
+
+    @property
+    def get_degree(self):
+        tmp = []
+        for elem in self.COURSE_GRADE:
+            if self.degree in elem:
+                tmp = elem
+                break
+        return tmp[1]
 
     def __repr__(self):
         return "<Course,%s>" % self.name
