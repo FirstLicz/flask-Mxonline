@@ -10,6 +10,31 @@ def do_format_date(value, cover_time=False):
     return result
 
 
+def do_slicer(value, slices=None):
+    if slices:
+        if slices.count(':') == 1:
+            start, end = slices.split(':')
+            try:
+                if start:
+                    start = int(start)
+                else:
+                    start = None
+                if end:
+                    end = int(end)
+                else:
+                    end = None
+            except ValueError as e:
+                return value
+            if start and end and start > end:
+                raise ValueError('Input parameter first must less than two')
+            result = value[start:end]
+        else:
+            raise ValueError('Input parameter error:example slicer("1:2")')
+    else:
+        result = value
+    return result
+
+
 # 可以给过滤器器一个名字，如果没有，默认就是函数的名字
 # app.add_template_filter(list_reverse,'li_reverse')
 

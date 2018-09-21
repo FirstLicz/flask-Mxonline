@@ -27,3 +27,12 @@ def course_list():
         sort=sort,
         recommend_course=recommend_course
     )
+
+
+@courses.route('/detail/<int:course_id>')
+def course_detail(course_id):
+    course = Course.query.get_or_404(int(course_id))
+    return render_template(
+        'course/course-detail.html',
+        course=course,
+    )

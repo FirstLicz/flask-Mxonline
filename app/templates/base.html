@@ -87,7 +87,7 @@
                             <ul>
                                 <li {% if request.endpoint=='index.index' %}class="active"{% endif %}>
                                     <a href="{{ url_for('index.index') }}">首页</a></li>
-                                <li {% if request.endpoint=='courses.course_list' %}class="active"{% endif %}>
+                                <li {% if request.endpoint|slicer(':7') =='courses' %}class="active"{% endif %}>
                                     <a href="{{ url_for('courses.course_list') }}">
                                         公开课<img class="hot" src="{{ url_for('static',filename='images/nav_hot.png') }}">
                                     </a>
