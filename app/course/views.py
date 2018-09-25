@@ -3,7 +3,7 @@ from flask_login import login_user, logout_user, current_user, login_required
 from flask import current_app
 
 from . import courses
-from ..models import Course
+from ..models import Course, Lesson
 
 
 @courses.route('/list/')
@@ -35,4 +35,22 @@ def course_detail(course_id):
     return render_template(
         'course/course-detail.html',
         course=course,
+    )
+
+
+@courses.route('/section/<int:course_id>')
+def course_section(course_id):
+    course = Course.query.get_or_404(int(course_id))
+    return render_template(
+        'course/course-video.html',
+        course=course,
+    )
+
+
+@courses.route('/video/<int:lesson_id>')
+def course_video(lesson_id):
+    lessons = Lesson.query.get_or_404(int(lesson_id))
+    return render_template(
+        'course/course-video.html',
+        lessons=lessons,
     )
