@@ -371,12 +371,13 @@ class Course(db.Model):
     learn_time = db.Column(db.Integer, default=0, comment='学习时长(默认分钟)')
     category = db.Column(db.String(20), default='后台开发', comment='课程分类')
     tag = db.Column(db.String(20), comment='标题')
+    notice = db.Column(db.String(128), comment='公告')
     youneed_know = db.Column(db.String(300), comment='课程须知')
     teacher_tell = db.Column(db.String(300), comment='老师告诉你')
     courseorg_id = db.Column(db.Integer, db.ForeignKey('course_orgs.id'), comment='课程所属机构')
     teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.id'), comment='课程讲师')
     add_time = db.Column(db.DateTime, default=datetime.now, comment='添加时间', doc='添加时间')
-    lessions = db.relationship('Lession', backref='course')
+    lessons = db.relationship('Lesson', backref='course')
 
     @property
     def get_degree(self):
@@ -394,13 +395,14 @@ class Course(db.Model):
         return self.name
 
 
-class Lession(db.Model):
-    __tablename__ = 'lessions'
+class Lesson(db.Model):
+    __tablename__ = 'lessons'
     id = db.Column(db.Integer, primary_key=True, unique=True, nullable=False, autoincrement=True)
     name = db.Column(db.String(50), comment='章节')
     learn_times = db.Column(db.Integer, comment='学习时长(分钟)')
     course_id = db.Column(db.Integer, db.ForeignKey('courses.id'), comment='所属课程')
     add_time = db.Column(db.DateTime, default=datetime.now, comment='添加时间', doc='添加时间')
+    videos = db.relationship('Video', backref='lesson')
 
     def __repr__(self):
         return "<Lession,%s>" % self.names
@@ -413,7 +415,8 @@ class Video(db.Model):
     __tablename__ = 'videos'
     id = db.Column(db.Integer, primary_key=True, unique=True, nullable=False, autoincrement=True)
     name = db.Column(db.String(50), comment='视频名')
-    lession_id = db.Column(db.Integer, db.ForeignKey('lessions.id'), comment='所属章节')
+    path = db.Column(db.String(200), comment='文件路径')
+    lesson_id = db.Column(db.Integer, db.ForeignKey('lessons.id'), comment='所属章节')
     learn_times = db.Column(db.Integer, default=0, comment='学习时长')
     add_time = db.Column(db.DateTime, default=datetime.now, comment='添加时间', doc='添加时间')
 
