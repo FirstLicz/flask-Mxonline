@@ -8,7 +8,8 @@ from flask_login import current_user
 from jinja2 import Markup
 import os
 
-from .models import User, Teacher, Course, CourseOrg, File, Image, EmailVerifyCode, UserFavorite
+from .models import User, Teacher, Course, CourseOrg, File, Image, EmailVerifyCode, UserFavorite, Video, \
+    Lesson
 from .admin_fields import UEditorField
 
 file_path = os.path.join(os.path.dirname(__file__), 'static')
@@ -67,9 +68,9 @@ class UserModelView(MyBaseModelView):
         # 调用用户模型中定义的set方法
         User.set_password(form.password_hash.data)
 
-    column_exclude_list = ['password_hash', ]
-    # column_editable_list = ['', ]
-    form_excluded_columns = ['messages', 'comments', 'password_hash']
+    # column_exclude_list = ['password_hash', ]
+    column_editable_list = ['password_hash', ]
+    form_excluded_columns = ['messages', 'comments', 'favorites']
     from .models import User
     column_choices = {
         'gender': User.GENDER,
@@ -88,6 +89,10 @@ class UserModelView(MyBaseModelView):
             base_path=file_path,
             relative_path='media/uploadFile/user/',
             thumbnail_size=(60, 60, True)),
+    }
+
+    column_labels = {
+        'password_hash': 'password',
     }
 
 
@@ -159,7 +164,7 @@ class CourseModelView(MyBaseModelView):
         'degree': Course.COURSE_GRADE,
     }
 
-    form_excluded_columns = ['lessions', ]
+    form_excluded_columns = ['lessons', ]
     form_overrides = dict(
         degree=Select2Field,
         detail=UEditorField,
@@ -203,6 +208,26 @@ class CourseOrgModelView(MyBaseModelView):
             base_path=file_path,
             relative_path='media/uploadFile/org/',
             thumbnail_size=(60, 60, True)),
+    }
+
+
+class LessonModelView(MyBaseModelView):
+    form_excluded_columns = ['videos', ]
+
+
+class VideoModelView(MyBaseModelView):
+    form_overrides = {
+        'path': form.FileUploadField
+    }
+
+    # Pass additional parameters to 'path' to FileUploadField constructor
+    form_args = {
+        'path': {
+            'label': 'File',
+            'base_path': file_path,
+            'relative_path': 'media/uploadFile/video/',
+            'allow_overwrite': False
+        }
     }
 
 
@@ -279,6 +304,22 @@ def del_file(mapper, connection, target):
 
 
 @listens_for(Image, 'after_delete')
+def del_image(mapper, connection, target):
+    if target.path:
+        # Delete image
+        try:
+            os.remove(os.path.join(file_path, target.path))
+        except OSError:
+            pass
+
+        # Delete thumbnail
+        try:
+            os.remove(os.path.join(file_path, thumbgen_filename(target.path)))
+        except OSError:
+            pass
+
+
+@listens_for(Video, 'after_delete')
 def del_image(mapper, connection, target):
     if target.path:
         # Delete image
