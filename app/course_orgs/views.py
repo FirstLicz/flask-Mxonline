@@ -17,10 +17,10 @@ def org_list():
     if category and city_id:
         pagination = CourseOrg.query.filter_by(category=category, city_id=city_id).paginate(
             page, per_page=current_app.config['FLASK_PER_PAGE'], error_out=False)
-    if city_id:
+    elif city_id:
         pagination = CourseOrg.query.filter_by(city_id=city_id).paginate(
             page, per_page=current_app.config['FLASK_PER_PAGE'], error_out=False)
-    if category:
+    elif category:
         pagination = CourseOrg.query.filter_by(category=category).paginate(
             page, per_page=current_app.config['FLASK_PER_PAGE'], error_out=False)
 
@@ -46,7 +46,6 @@ def org_home_page(org_id):
     organization = CourseOrg.query.get_or_404(int(org_id))
     courses = organization.courses[:4]
     teachers = organization.teachers[:3]
-    print(dir(org_home_page))
     return render_template(
         'org/org-detail-homepage.html',
         organization=organization,

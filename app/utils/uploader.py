@@ -56,7 +56,7 @@ class UpLoader(object):
                 self.base_name = self.base_name + _ext
                 base_name = os.path.abspath(self.upload_path + self.base_name)
                 if not os.path.isdir(os.path.dirname(base_name)):
-                    print(os.path.dirname(base_name))
+                    # print(os.path.dirname(base_name))
                     try:
                         os.makedirs(os.path.dirname(base_name))
                     except Exception as e:
