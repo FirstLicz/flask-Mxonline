@@ -22,14 +22,16 @@ login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'
 
 from app.models import User, Course, Teacher, CourseOrg, CityDict, UserFavorite, EmailVerifyCode, \
-    Banner, CourseComments, CourseResource
+    Banner, CourseComments, CourseResource, Video, Lesson
 from .xadmin import UserModelView, CityModelView, CourseModelView, TeacherModelView, \
     UserFavoriteModelView, EmailVerifyCodeModelView, BannerModelView, CourseCommentsModelView, \
-    CourseResourceModelView, CourseOrgModelView
+    CourseResourceModelView, CourseOrgModelView, VideoModelView, LessonModelView
 
 admin.add_view(UserModelView(User, db.session, name='用户'))
 admin.add_view(CityModelView(CityDict, db.session, name='城市'))
 admin.add_view(CourseModelView(Course, db.session, name='课程'))
+admin.add_view(LessonModelView(Lesson, db.session, name='章节'))
+admin.add_view(VideoModelView(Video, db.session, name='章节视频'))
 admin.add_view(CourseOrgModelView(CourseOrg, db.session, name='授课机构'))
 admin.add_view(CourseCommentsModelView(CourseComments, db.session, name='课程评论'))
 admin.add_view(CourseResourceModelView(CourseResource, db.session, name='课程资源'))
