@@ -8,7 +8,7 @@ from flask_babelex import Babel
 from flask_ckeditor import CKEditor
 
 from config import config
-from .template_filters import do_format_date, do_slicer
+from .template_filters import do_format_date, do_slicer, diff_time_year
 
 db = SQLAlchemy()
 mail = Mail()
@@ -65,6 +65,7 @@ def create_app(config_name):
 
     app.add_template_filter(do_format_date, 'datetime')  # 注册到app模板过滤器
     app.add_template_filter(do_slicer, 'slicer')  # 注册到app模板过滤器
+    app.add_template_filter(diff_time_year, 'age_year')  # 注册到app模板过滤器
 
     from .index import index as index_blueprint
     app.register_blueprint(index_blueprint)
