@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, AnonymousUserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
@@ -342,6 +342,7 @@ class Teacher(db.Model):
     course_org_id = db.Column(db.Integer, db.ForeignKey('course_orgs.id'), comment='讲师所属机构')
     add_time = db.Column(db.DateTime, default=datetime.now, comment='添加时间', doc='添加时间')
     courses = db.relationship('Course', backref='teacher')
+    birthday = db.Column(db.Date, default=date.today, comment='出生日期')
 
     def __repr__(self):
         return "<Teacher,%s>" % self.name
