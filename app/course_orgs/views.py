@@ -3,7 +3,7 @@ from flask_login import login_user, logout_user, current_user, login_required
 from flask import current_app
 
 from . import org
-from ..models import CourseOrg, CityDict, Course
+from ..models import CourseOrg, CityDict, Course, Teacher
 
 
 @org.route('/list/')
@@ -96,4 +96,36 @@ def org_teacher_page(org_id):
     return render_template(
         'org/org-detail-teachers.html',
         organization=organization,
+    )
+
+
+@org.route('/teacher/list/')
+def teacher_list():
+    page = request.args.get('page', 1, type=int)
+    sort = request.args.get('sort', 'default', type=str)
+    pagination = Teacher.query.order_by().paginate(page, per_page=12, error_out=False)
+    if sort == 'popularity':
+        pagination = Teacher.query.order_by(Teacher.fav_nums.desc()).paginate(page, per_page=12, error_out=False)
+    total_teachers = Teacher.query.count()
+    return render_template(
+        'org/teacher-list.html',
+        pagination=pagination,
+        sort=sort,
+        total_teachers=total_teachers,
+    )
+
+
+@org.route('/teacher/detail/<int:teacher_id>')
+def teacher_detail(teacher_id):
+    page = request.args.get('page', 1, type=int)
+    sort = request.args.get('sort', 'default', type=str)
+    pagination = Teacher.query.order_by().paginate(page, per_page=12, error_out=False)
+    if sort == 'popularity':
+        pagination = Teacher.query.order_by(Teacher.fav_nums.desc()).paginate(page, per_page=12, error_out=False)
+    total_teachers = Teacher.query.count()
+    return render_template(
+        'org/teacher-detail.html',
+        pagination=pagination,
+        sort=sort,
+        total_teachers=total_teachers,
     )
