@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 import time
 
 
@@ -34,6 +34,17 @@ def do_slicer(value, slices=None):
         result = value
     return result
 
+
+def diff_time_year(value):
+    """
+        date类相减，获取差天数，计算年龄
+    """
+    result = ''
+    if value and isinstance(value, date):
+        today = date.today()
+        sub_result = today - value
+        result = sub_result.days // 365
+    return result
 
 # 可以给过滤器器一个名字，如果没有，默认就是函数的名字
 # app.add_template_filter(list_reverse,'li_reverse')
