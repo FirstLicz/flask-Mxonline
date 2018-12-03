@@ -334,7 +334,7 @@ class Teacher(db.Model):
     name = db.Column(db.String(20), index=True, unique=True, comment='讲师')
     image = db.Column(db.String(100), comment='讲师头像')
     profession = db.Column(db.String(6), default='jp', comment='讲师职称')
-    work_years = db.Column(db.Integer, default=0, comment='工作年限')
+    work_years = db.Column(db.Integer, default=0, nullable=False, comment='工作年限')
     work_company = db.Column(db.String(50), comment='就职公司')
     work_position = db.Column(db.String(20), comment='公司职业')
     points = db.Column(db.String(50), comment='教学特点')
@@ -343,6 +343,13 @@ class Teacher(db.Model):
     add_time = db.Column(db.DateTime, default=datetime.now, comment='添加时间', doc='添加时间')
     courses = db.relationship('Course', backref='teacher')
     birthday = db.Column(db.Date, default=date.today, comment='出生日期')
+    hits = db.Column(db.Integer, default=0, nullable=False, comment='点击数')
+
+    @property
+    def click_hits(self):
+        self.hits += 1
+        db.session.add(self)
+        db.session.commit()
 
     def __repr__(self):
         return "<Teacher,%s>" % self.name

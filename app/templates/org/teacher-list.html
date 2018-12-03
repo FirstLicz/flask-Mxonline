@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}课程机构列表 - 慕学在线网{% endblock %}
+{% block title %}机构-讲师列表{% endblock %}
 
 <!--crumbs start-->
 
@@ -21,12 +21,14 @@
 {% block comment %}
     <section>
 	<div class="wp butler_list_box list">
-	<div class='left'>
-		<div class="butler_list layout">
-			<div class="head">
+        <div class='left'>
+            <div class="butler_list layout">
+                <div class="head">
 				<ul class="fl tab_header">
-					<li class="active"><a href="?sort=default">全部</a> </li>
-					<li ><a href="?sort=hot">人气 &#8595;</a></li>
+                    <li class="{% if sort == 'default' %}active{% else %}{% endif %}"><a href="?sort=default">全部</a>
+                    </li>
+                    <li class="{% if sort == 'hot' %}active{% else %}{% endif %}"><a href="?sort=hot">人气 &#8595;</a>
+                    </li>
 				</ul>
                 <div class="fr butler-num">共<span class="key">{{ total_teachers }}</span>人&nbsp;&nbsp;&nbsp;</div>
 			</div>
@@ -41,8 +43,8 @@
                         </a>
 						<div class="btn">
 							<div class="fr btn2 bdsharebuttonbox"
-                                 data-text="授课教师-奥巴马-慕学在线"
-                                 data-desc="我在#慕课网#发现了教师“奥巴马”，对学习中的小伙伴很有帮助，一起来看看吧。"
+                                 data-text="授课教师-奥巴马-在线"
+                                 data-desc="我在#dawda#发现了教师“奥巴马”，对学习中的小伙伴很有帮助，一起来看看吧。"
                                  data-comment="奥巴马金牌讲师，从业年限：5年"
                                  >
                                 <span class="fl">分享</span>
@@ -70,64 +72,55 @@
 		</div>
 		<div class="pageturn">
             <ul class="pagelist">
-
-                            <li class="active"><a href="?page=1">1</a></li>
-                        
-                            <li><a href="?page=2" class="page">2</a></li>
-                
-                    <li class="long"><a href="?page=2">下一页</a></li>
-
+                <li class="long" style="display:{% if pagination.has_prev %}block{% else %}none{% endif %}">
+                    <a href="{{ url_for('org.teacher_list',page=pagination.page - 1,sort=sort) }}">上一页</a>
+                </li>
+                {% for p in pagination.iter_pages() %}
+                    {% if p %}
+                        {% if p==pagination.page %}
+                            <li class="active">
+                                <a href="{{ url_for('org.teacher_list',page=p,sort=sort) }}">{{ p }}</a>
+                            </li>
+                        {% else %}
+                            <li>
+                                <a href="{{ url_for('org.teacher_list',page=p,sort=sort) }}">{{ p }}</a>
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+                <li class="long"
+                    style="display:{% if pagination.has_next %}block{% else %}none{% endif %}">
+                    <a href="{{ url_for('org.teacher_list',page=pagination.page + 1,sort=sort) }}">下一页</a>
+                </li>
             </ul>
         </div>
 	</div>
-	<div class="right layout">
-		<div class="head">讲师排行榜</div>
-            
-            <dl class="des">
-                <span class="num fl">1</span>
-                <a href="/diary/hk_detail/6/">
-                    <dt>
-                        <img width="50" height="50" class="scrollLoading"  src="../media/teacher/2016/11/aobama_CXWwMef.png"/>
-                    </dt>
-                </a>
-                <dd>
-                    <a href="/diary/hk_detail/6/">
-                        <h1 title="bobby">bobby</h1>
+        <div class="right layout">
+            <div class="head">讲师排行榜</div>
+            {% for teacher in ranking_teachers %}
+                <dl class="des">
+                    <span class="num fl">{{ loop.index }}</span>
+                    <a href="">
+                        <dt>
+                            <img width="50" height="50" class="scrollLoading"
+                                 src="{{ url_for('static',filename=teacher.image) }}"/>
+                        </dt>
                     </a>
-                    <p>工作年限：<span>5年</span></p>
-                </dd>
-            </dl>
-            
-            <dl class="des">
-                <span class="num fl">1</span>
-                <a href="/diary/hk_detail/6/">
-                    <dt>
-                        <img width="50" height="50" class="scrollLoading"  src="../media/teacher/2016/11/aobama.png"/>
-                    </dt>
-                </a>
-                <dd>
-                    <a href="/diary/hk_detail/6/">
-                        <h1 title="还是bobby">还是bobby</h1>
-                    </a>
-                    <p>工作年限：<span>5年</span></p>
-                </dd>
-            </dl>
-            
-
-	</div>
+                    <dd>
+                        <a href="">
+                            <h1 title="bobby">{{ teacher.name }}</h1>
+                        </a>
+                        <p>工作年限：<span>{{ teacher.work_years }}年</span></p>
+                    </dd>
+                </dl>
+            {% endfor %}
+        </div>
     </div>
 </section>
 
 {% endblock %}
 
-<section>
-    <ul class="sidebar">
-        <li class="qq">
-            <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=2023525077&site=qq&menu=yes"></a>
-        </li>
-        <li class="totop"></li>
-    </ul>
-</section>
+
 {% block extend_js %}
     <script type="text/javascript" src="{{ url_for('static',filename='js/deco-common.js') }}"></script>
 {% endblock %}

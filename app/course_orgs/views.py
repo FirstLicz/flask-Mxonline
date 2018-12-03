@@ -103,15 +103,17 @@ def org_teacher_page(org_id):
 def teacher_list():
     page = request.args.get('page', 1, type=int)
     sort = request.args.get('sort', 'default', type=str)
-    pagination = Teacher.query.order_by().paginate(page, per_page=12, error_out=False)
-    if sort == 'popularity':
-        pagination = Teacher.query.order_by(Teacher.fav_nums.desc()).paginate(page, per_page=12, error_out=False)
+    pagination = Teacher.query.order_by().paginate(page, per_page=6, error_out=False)
+    if sort == 'hot':
+        pagination = Teacher.query.order_by(Teacher.hits.desc()).paginate(page, per_page=6, error_out=False)
     total_teachers = Teacher.query.count()
+    ranking_teachers = Teacher.query.order_by(Teacher.hits.desc()).filter_by()[:5]
     return render_template(
         'org/teacher-list.html',
         pagination=pagination,
         sort=sort,
         total_teachers=total_teachers,
+        ranking_teachers=ranking_teachers,
     )
 
 
