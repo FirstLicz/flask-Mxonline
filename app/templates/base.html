@@ -92,7 +92,7 @@
                                         公开课<img class="hot" src="{{ url_for('static',filename='images/nav_hot.png') }}">
                                     </a>
                                 </li>
-                                <li {% if request.endpoint=='org.teacher_list' %}class="active"{% endif %}>
+                                <li {% if request.endpoint|slicer(':11')=='org.teacher' %}class="active"{% endif %}>
                                     <a href="{{ url_for('org.teacher_list') }}">授课教师</a>
                                 </li>
                                 <li {% if request.endpoint=='org.org_list' %}class="active"{% endif %}>

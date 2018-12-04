@@ -3,6 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, AnonymousUserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app
+from sqlalchemy.sql import func
 
 from app import db
 
@@ -315,6 +316,7 @@ class CourseOrg(db.Model):
     courses = db.relationship('Course', backref='courseorg')
     teachers = db.relationship('Teacher', backref='courseorg')
     add_time = db.Column(db.DateTime, default=datetime.now, comment='添加时间', doc='添加时间')
+    abstract = db.Column(db.String(128), default="权威教学", comment="机构简介")
 
     def __repr__(self):
         return "<CourseOrg,%s>" % self.name
@@ -335,10 +337,10 @@ class Teacher(db.Model):
     image = db.Column(db.String(100), comment='讲师头像')
     profession = db.Column(db.String(6), default='jp', comment='讲师职称')
     work_years = db.Column(db.Integer, default=0, nullable=False, comment='工作年限')
-    work_company = db.Column(db.String(50), comment='就职公司')
-    work_position = db.Column(db.String(20), comment='公司职业')
-    points = db.Column(db.String(50), comment='教学特点')
-    fav_nums = db.Column(db.Integer, default=0, comment='收藏数')
+    work_company = db.Column(db.String(50), default='', comment='就职公司')
+    work_position = db.Column(db.String(20), default='', comment='公司职业')
+    points = db.Column(db.String(50), default='', comment='教学特点')
+    fav_nums = db.Column(db.Integer, default=0, nullable=False, comment='收藏数')
     course_org_id = db.Column(db.Integer, db.ForeignKey('course_orgs.id'), comment='讲师所属机构')
     add_time = db.Column(db.DateTime, default=datetime.now, comment='添加时间', doc='添加时间')
     courses = db.relationship('Course', backref='teacher')
@@ -350,6 +352,13 @@ class Teacher(db.Model):
         self.hits += 1
         db.session.add(self)
         db.session.commit()
+
+    @property
+    def get_profession(self):
+        for elem in self.PROFESSIONAL:
+            if elem[0] == self.profession:
+                return elem[1]
+        return '铜牌讲师'
 
     def __repr__(self):
         return "<Teacher,%s>" % self.name

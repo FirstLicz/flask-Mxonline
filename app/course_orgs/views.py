@@ -120,14 +120,15 @@ def teacher_list():
 @org.route('/teacher/detail/<int:teacher_id>')
 def teacher_detail(teacher_id):
     page = request.args.get('page', 1, type=int)
-    sort = request.args.get('sort', 'default', type=str)
-    pagination = Teacher.query.order_by().paginate(page, per_page=12, error_out=False)
-    if sort == 'popularity':
-        pagination = Teacher.query.order_by(Teacher.fav_nums.desc()).paginate(page, per_page=12, error_out=False)
-    total_teachers = Teacher.query.count()
+    teacher = Teacher.query.get_or_404(teacher_id)
+    pagination = Course.query.filter_by(teacher_id=teacher_id).paginate(page, per_page=8, error_out=False)
+    course_org = CourseOrg.query.get_or_404(teacher.course_org_id)
+    org_teachers = Teacher.query.filter_by(course_org_id=teacher.course_org_id).order_by(Teacher.hits.desc())[:5]
+    print(org_teachers[0].courseorg)
     return render_template(
         'org/teacher-detail.html',
+        teacher=teacher,
         pagination=pagination,
-        sort=sort,
-        total_teachers=total_teachers,
+        course_org=course_org,
+        org_teachers=org_teachers,
     )
