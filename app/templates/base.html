@@ -67,10 +67,10 @@
                         <div class="searchbox fr">
                             <div class="selectContainer fl">
                             <span class="selectOption" id="jsSelectOption" data-value="course">
-                                公开课
+                                课程
                             </span>
                                 <ul class="selectMenu" id="jsSelectMenu">
-                                    <li data-value="course">公开课</li>
+                                    <li data-value="course">课程</li>
                                     <li data-value="org">课程机构</li>
                                     <li data-value="teacher">授课老师</li>
                                 </ul>
@@ -89,7 +89,7 @@
                                     <a href="{{ url_for('index.index') }}">首页</a></li>
                                 <li {% if request.endpoint|slicer(':7') =='courses' %}class="active"{% endif %}>
                                     <a href="{{ url_for('courses.course_list') }}">
-                                        公开课<img class="hot" src="{{ url_for('static',filename='images/nav_hot.png') }}">
+                                        课程<!--<img class="hot" src="{{ url_for('static',filename='images/nav_hot.png') }}">-->
                                     </a>
                                 </li>
                                 <li {% if request.endpoint|slicer(':11')=='org.teacher' %}class="active"{% endif %}>
@@ -118,10 +118,10 @@
             <div class="footer">
                 <div class="wp">
                     <ul class="cont">
-                        <li class="logo"><a href=""><img src="{{url_for('static',filename='images/footlogo.png')}}"/></a></li>
+                        <!----><li class="logo"><a href=""><img src="{{url_for('static',filename='images/footlogo.png')}}"/></a></li>
                         <li class="code"><img src="{{url_for('static',filename='images/code.jpg')}}"/>
                             <p class="center">扫描关注微信</p></li>
-                        <li class="third"><img class="fl" src="{{url_for('static',filename='images/tell.png')}}"/>
+                        <!----><li class="third"><img class="fl" src="{{url_for('static',filename='images/tell.png')}}"/>
                             <p class="tell">8888888</p>
                             <p class="time">周一至周日 9:00-18:00</p></li>
                     </ul>
