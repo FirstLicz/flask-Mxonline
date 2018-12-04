@@ -76,7 +76,7 @@
                                 </ul>
                             </div>
                             <input id="search_keywords" class="fl" type="text" value="" placeholder="请输入搜索内容"/>
-                            <img class="search_btn fr" id="jsSearchBtn" src="images/search_btn.png"/>
+                            <img class="search_btn fr" id="jsSearchBtn" src="{{url_for('static',filename='images/search_btn.png')}}"/>
                         </div>
                     </div>
                 </div>
@@ -118,10 +118,10 @@
             <div class="footer">
                 <div class="wp">
                     <ul class="cont">
-                        <li class="logo"><a href=""><img src="images/footlogo.png"/></a></li>
+                        <li class="logo"><a href=""><img src="{{url_for('static',filename='images/footlogo.png')}}"/></a></li>
                         <li class="code"><img src="images/code.jpg"/>
                             <p class="center">扫描关注微信</p></li>
-                        <li class="third"><img class="fl" src="images/tell.png"/>
+                        <li class="third"><img class="fl" src="{{url_for('static',filename='images/tell.png')}}"/>
                             <p class="tell">33333333</p>
                             <p class="time">周一至周日 9:00-18:00</p></li>
                     </ul>
