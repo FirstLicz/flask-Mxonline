@@ -65,11 +65,11 @@
                         <div class="group_list brief">
                         {% for course in pagination.items %}
                             <div class="module1_{{ loop.index0 + 5 }} box">
-                                <a href="course-detail.html">
+                                <a href="{{ url_for('courses.course_detail',course_id=course.id) }}">
                                     <img width="214" height="190" class="scrollLoading" src="{{ url_for('static',filename=course.image) }}"/>
                                 </a>
                                 <div class="des">
-                                    <a href="course-detail.html"><h2>{{ course.name }}</h2></a>
+                                    <a href="{{ url_for('courses.course_detail',course_id=course.id) }}"><h2>{{ course.name }}</h2></a>
                                     <span class="fl">时长：<i class="key">{{ course.learn_time }}</i></span>
                                     <span class="fr">学习人数：{{ course.students }}</span>
                                 </div>
