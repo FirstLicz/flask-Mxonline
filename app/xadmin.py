@@ -64,13 +64,13 @@ class MyBaseModelView(ModelView):
 
 
 class UserModelView(MyBaseModelView):
-    def on_model_change(self, form, User, is_created=False):
-        # 调用用户模型中定义的set方法
-        User.set_password(form.password_hash.data)
+    # def on_model_change(self, form, User, is_created=False):
+    #     # 调用用户模型中定义的set方法
+    #     User.set_password(form.password_hash.data)
 
     # column_exclude_list = ['password_hash', ]
-    column_editable_list = ['password_hash', ]
-    form_excluded_columns = ['messages', 'comments', 'favorites']
+    # column_editable_list = ['password_hash', ]
+    form_excluded_columns = ['messages', 'comments', 'favorites', 'password_hash',]
     from .models import User
     column_choices = {
         'gender': User.GENDER,
