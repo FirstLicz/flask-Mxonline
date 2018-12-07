@@ -1,9 +1,10 @@
 from flask import render_template, redirect, url_for, make_response, session, request, Response
 from flask_login import login_user, logout_user, current_user, login_required
 from flask import current_app
+from flask_sqlalchemy import Pagination
 
 from . import users
-from ..models import User
+from ..models import User, Course
 
 
 @users.route('/info/')
@@ -17,8 +18,11 @@ def user_info():
 @users.route('/courses/')
 @login_required
 def user_courses():
+    page = request.args.get('page', 1, type=int)
+    total_courses = current_user.courses
     return render_template(
         'users/usercenter-mycourse.html',
+        pagination=total_courses,
     )
 
 

@@ -23,113 +23,22 @@
 		<div class="personal_des permessage">
 			<div class="companycenter">
 				<div class="group_list brief">
-                    
+                    {% for course in pagination %}
                     <div class="module1_5 box">
-                            <a href="course-detail.html">
-                                <img width="214" height="190" class="scrollLoading" src="../media/courses/2016/11/540e57300001d6d906000338-240-135_n0L8vbw.jpg"/>
+                            <a href="{{ url_for('courses.course_detail',course_id=course.id) }}">
+                                <img width="214" height="190" class="scrollLoading" src="{{ url_for('static',filename=course.image) }}"/>
                             </a>
                             <div class="des">
-                                <a href="course-detail.html"><h2>django与vuejs实战项目2</h2></a>
-                                <span class="fl">课时：<i class="key">0</i></span>
-                                <span class="fr">学习人数：13</span>
+                                <a href="{{ url_for('courses.course_detail',course_id=course.id) }}"><h2>{{ course.name }}</h2></a>
+                                <span class="fl">课时：<i class="key">{{ course.learn_time }}</i></span>
+                                <span class="fr">学习人数：{{ course.students }}</span>
                             </div>
                             <div class="bottom">
-                                <span class="fl">北京大学</span>
-                                <span class="star fr  notlogin" data-favid="15">0</span>
+                                <span class="fl">{{ course.courseorg.name }}</span>
+                                <span class="star fr  notlogin" data-favid="15">{{ course.courseorg.fav_nums }}</span>
                             </div>
                         </div>
-                    
-                    <div class="module1_5 box">
-                            <a href="course-detail.html">
-                                <img width="214" height="190" class="scrollLoading" src="../media/courses/2016/12/python文件处理.jpg"/>
-                            </a>
-                            <div class="des">
-                                <a href="course-detail.html"><h2>python文件处理</h2></a>
-                                <span class="fl">课时：<i class="key">0</i></span>
-                                <span class="fr">学习人数：2</span>
-                            </div>
-                            <div class="bottom">
-                                <span class="fl">北京大学</span>
-                                <span class="star fr  notlogin" data-favid="15">0</span>
-                            </div>
-                        </div>
-                    
-                    <div class="module1_5 box">
-                            <a href="course-detail.html">
-                                <img width="214" height="190" class="scrollLoading" src="../media/courses/2016/11/57035ff200014b8a06000338-240-135_dHfj8Nq.jpg"/>
-                            </a>
-                            <div class="des">
-                                <a href="course-detail.html"><h2>java入门2</h2></a>
-                                <span class="fl">课时：<i class="key">0</i></span>
-                                <span class="fr">学习人数：0</span>
-                            </div>
-                            <div class="bottom">
-                                <span class="fl">慕课网2</span>
-                                <span class="star fr  notlogin" data-favid="15">0</span>
-                            </div>
-                        </div>
-                    
-                    <div class="module1_5 box">
-                            <a href="course-detail.html">
-                                <img width="214" height="190" class="scrollLoading" src="../media/courses/2016/11/mysql.jpg"/>
-                            </a>
-                            <div class="des">
-                                <a href="course-detail.html"><h2>django入门</h2></a>
-                                <span class="fl">课时：<i class="key">0</i></span>
-                                <span class="fr">学习人数：3</span>
-                            </div>
-                            <div class="bottom">
-                                <span class="fl">慕课网</span>
-                                <span class="star fr  notlogin" data-favid="15">0</span>
-                            </div>
-                        </div>
-                    
-                    <div class="module1_5 box">
-                            <a href="course-detail.html">
-                                <img width="214" height="190" class="scrollLoading" src="../media/courses/2016/11/57035ff200014b8a06000338-240-135_0nFiBSI.jpg"/>
-                            </a>
-                            <div class="des">
-                                <a href="course-detail.html"><h2>java入门3</h2></a>
-                                <span class="fl">课时：<i class="key">0</i></span>
-                                <span class="fr">学习人数：1</span>
-                            </div>
-                            <div class="bottom">
-                                <span class="fl">慕课网3</span>
-                                <span class="star fr  notlogin" data-favid="15">0</span>
-                            </div>
-                        </div>
-                    
-                    <div class="module1_5 box">
-                            <a href="course-detail.html">
-                                <img width="214" height="190" class="scrollLoading" src="../media/courses/2016/12/python面向对象.jpg"/>
-                            </a>
-                            <div class="des">
-                                <a href="course-detail.html"><h2>python面向对象</h2></a>
-                                <span class="fl">课时：<i class="key">0</i></span>
-                                <span class="fr">学习人数：1</span>
-                            </div>
-                            <div class="bottom">
-                                <span class="fl">北京大学</span>
-                                <span class="star fr  notlogin" data-favid="15">0</span>
-                            </div>
-                        </div>
-                    
-                    <div class="module1_5 box">
-                            <a href="course-detail.html">
-                                <img width="214" height="190" class="scrollLoading" src="../media/courses/2016/12/mysql.jpg"/>
-                            </a>
-                            <div class="des">
-                                <a href="course-detail.html"><h2>xadmin进阶开发</h2></a>
-                                <span class="fl">课时：<i class="key">30</i></span>
-                                <span class="fr">学习人数：2</span>
-                            </div>
-                            <div class="bottom">
-                                <span class="fl">慕课网</span>
-                                <span class="star fr  notlogin" data-favid="15">1</span>
-                            </div>
-                        </div>
-                    
-
+                    {% endfor %}
 				</div>
 			</div>
 		</div>

@@ -51,6 +51,15 @@ class Role(db.Model):
         return self.name
 
 
+# 多对多的关系, 删除 migrations ，一点要清除alembic_version 表
+user_map_course = db.Table(
+    'user_course_table',
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True, comment='所述用户'),
+    db.Column('course_id', db.Integer, db.ForeignKey('courses.id'), primary_key=True, comment='所属课程'),
+    db.Column('add_time', db.DateTime, default=datetime.now, comment='添加时间'),
+)
+
+
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
 
@@ -77,6 +86,7 @@ class User(UserMixin, db.Model):
     messages = db.relationship('UserMessage', backref='user')
     comments = db.relationship('CourseComments', backref='user')
     favorites = db.relationship('UserFavorite', backref='user_favorites')
+    courses = db.relationship('Course', secondary='user_course_table', backref='users')
 
     @property
     def password(self):

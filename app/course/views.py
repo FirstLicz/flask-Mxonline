@@ -3,7 +3,7 @@ from flask_login import login_user, logout_user, current_user, login_required
 from flask import current_app
 
 from . import courses
-from ..models import Course, Lesson, Video
+from ..models import Course, Lesson, Video, db
 
 
 @courses.route('/list/')
@@ -32,6 +32,10 @@ def course_list():
 @courses.route('/detail/<int:course_id>')
 def course_detail(course_id):
     course = Course.query.get_or_404(int(course_id))
+    if not current_user.is_anonymous:
+        current_user.courses.append(course)
+        db.session.add(current_user)
+        db.session.commit()
     return render_template(
         'course/course-detail.html',
         course=course,
