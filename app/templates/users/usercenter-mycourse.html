@@ -23,7 +23,7 @@
 		<div class="personal_des permessage">
 			<div class="companycenter">
 				<div class="group_list brief">
-                    {% for course in pagination %}
+                    {% for course in pagination.get_items %}
                     <div class="module1_5 box">
                             <a href="{{ url_for('courses.course_detail',course_id=course.id) }}">
                                 <img width="214" height="190" class="scrollLoading" src="{{ url_for('static',filename=course.image) }}"/>
@@ -39,6 +39,31 @@
                             </div>
                         </div>
                     {% endfor %}
+                    <div class="pageturn">
+                        <ul class="pagelist">
+                            <li class="long"
+                                style="display:{% if pagination.has_prev %}block{% else %}none{% endif %}">
+                                <a href="{{ url_for('users.user_courses',page=pagination.page - 1) }}">上一页</a>
+                            </li>
+                            {% for p in pagination.iter_pages() %}
+                                {% if p %}
+                                    {% if p==pagination.page %}
+                                        <li class="active">
+                                            <a href="{{ url_for('users.user_courses') }}">{{ p }}</a>
+                                        </li>
+                                    {% else %}
+                                        <li>
+                                            <a href="{{ url_for('users.user_courses') }}">{{ p }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            <li class="long"
+                                style="display:{% if pagination.has_next %}block{% else %}none{% endif %}">
+                                <a href="{{ url_for('users.user_courses',page=pagination.page + 1) }}">下一页</a>
+                            </li>
+                        </ul>
+                    </div>
 				</div>
 			</div>
 		</div>

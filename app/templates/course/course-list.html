@@ -59,6 +59,9 @@
                             </div>
                             <div class="pageturn">
                                 <ul class="pagelist">
+                                    <li class="long" style="display:{% if pagination.has_prev %}block{% else %}none{% endif %}">
+                                        <a href="{{ url_for('courses.course_list',page=pagination.page - 1,sort=sort) }}">上一页</a>
+                                    </li>
                                     {% for p in pagination.iter_pages() %}
                                         {% if p %}
                                             {% if p==pagination.page %}
@@ -73,7 +76,7 @@
                                         {% endif %}
                                     {% endfor %}
                                     <li class="long"
-                                        style="display:{% if pagination.has_prev %}block{% else %}none{% endif %}">
+                                        style="display:{% if pagination.has_next %}block{% else %}none{% endif %}">
                                         <a href="{{ url_for('courses.course_list',page=pagination.page + 1,sort=sort) }}">下一页</a>
                                     </li>
                                 </ul>

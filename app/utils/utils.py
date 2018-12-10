@@ -1,3 +1,6 @@
+from math import ceil
+
+
 def createsuperuser():
     from app.models import User, Role
     from app import db
@@ -21,17 +24,14 @@ def createsuperuser():
 
 class Pagination(object):
 
-    def __init__(self, query, page, per_page, total, items):
-        #: the unlimited query object that was used to create this
-        #: pagination object.
-        self.query = query
+    def __init__(self, page, per_page, items=None):
         #: the current page number (1 indexed)
         self.page = page
         #: the number of items to be displayed on a page.
         self.per_page = per_page
         #: the total number of items matching the query
-        self.total = total
-        #: the items for the current page
+        self.total = len(items)
+        #: the items for the current page list data
         self.items = items
 
     @property
@@ -40,7 +40,7 @@ class Pagination(object):
         if self.per_page == 0:
             pages = 0
         else:
-            pages = int(self.total // self.per_page)
+            pages = int(ceil(self.total / self.per_page))
         return pages
 
     @property
@@ -88,10 +88,30 @@ class Pagination(object):
         """
         last = 0
         for num in range(1, self.pages + 1):
-            if num <= left_edge or \
-                    (num > self.page - left_current - 1 and num < self.page + right_current) or \
-                        num > self.pages - right_edge:
+            if num <= left_edge or (num > self.page - left_current - 1 and num < self.page + right_current) or \
+                    num > self.pages - right_edge:
                 if last + 1 != num:
                     yield None
                 yield num
                 last = num
+
+    @property
+    def get_items(self):
+        if self.page == 1:
+            data = self.items[:self.per_page]
+        elif self.page == self.pages:
+            data = self.items[self.per_page * (self.page - 1):]
+        else:
+            data = self.items[self.per_page * (self.page - 1):self.per_page * self.page]
+        return data
+
+
+if __name__ == "__main__":
+    from app.models import User
+
+    user = User.query.get_or_404(2)
+    print(user)
+    total_courses = user.courses
+    print(total_courses)
+    a = Pagination(page=2, per_page=8, items=total_courses)
+    print(a.get_items)
