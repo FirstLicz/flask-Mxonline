@@ -14,14 +14,15 @@ class TestPagination(unittest.TestCase):
         print("生成实例之前")
 
     def tearDown(self):  # 每个测试用例执行之后做操作
+        self.app_context.pop()
         print("生成实例之后")
 
     @classmethod
-    def setUpClass(self):  # 必须使用@classmethod 装饰器,所有test运行前运行一次
+    def setUpClass(cls):  # 必须使用@classmethod 装饰器,所有test运行前运行一次
         pass
 
     @classmethod
-    def tearDownClass(self):  # 必须使用@classmethod 装饰器, 所有test运行完后运行一次
+    def tearDownClass(cls):  # 必须使用@classmethod 装饰器, 所有test运行完后运行一次
         pass
 
     def test_pagination(self):
