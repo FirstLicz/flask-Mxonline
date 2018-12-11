@@ -145,18 +145,19 @@
         $.ajax({
             cache: false,
             type: "POST",
-            url: "/org/add_fav/",
+            url: "{{ url_for('users.add_user_collect') }}",
             data: {'fav_id': fav_id, 'fav_type': fav_type},
             async: true,
             beforeSend: function (xhr, settings) {
                 xhr.setRequestHeader("X-CSRFToken", "5I2SlleZJOMUX9QbwYLUIAOshdrdpRcy");
             },
             success: function (data) {
-                if (data.status == 'fail') {
+                console.log(data);
+                if (data.status == 'failed') {
                     if (data.msg == '用户未登录') {
-                        window.location.href = "login.html";
+                        window.location.href = "{{ url_for('auth.login') }}";
                     } else {
-                        alert(data.msg)
+                        alert(data.msg);
                     }
 
                 } else if (data.status == 'success') {
@@ -168,7 +169,7 @@
 
     $(document).ready(function () {
         $('.collectionbtn').on('click', function () {
-            add_fav($(this), 1, 2);
+            add_fav($(this), {{ organization.id }}, 1);
         });
     });
     $(function () {

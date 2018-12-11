@@ -1,9 +1,9 @@
-from flask import render_template, redirect, url_for, make_response, session, request, Response
+from flask import render_template, redirect, url_for, make_response, session, request, Response, jsonify
 from flask_login import login_user, logout_user, current_user, login_required
 from flask import current_app
 
 from . import users
-from ..models import User, Course, UserFavorite, Teacher, CourseOrg
+from ..models import User, Course, UserFavorite, Teacher, CourseOrg, db
 from ..utils.utils import Pagination
 
 
@@ -92,3 +92,51 @@ def user_messages():
     return render_template(
         'users/usercenter-mycourse.html',
     )
+
+
+@users.route('/add_collect/', methods=['POST', ])
+def add_user_collect():
+    """
+        ('0', '课程'),
+        ('1', '机构'),
+        ('2', '讲师'),
+    """
+    if request.method == 'POST':
+        if not current_user.is_authenticated:
+            response = make_response(jsonify({"status": "failed", "msg": "用户未登录"}))
+            response.headers['Access-Control-Allow-Origin'] = '*'
+            return response
+        fav_id = request.values.get('fav_id')
+        fav_type = request.values.get('fav_type')
+        fav_record = UserFavorite.query.filter_by(fav_type=fav_type, fav_id=fav_id).first()
+        if fav_record:
+            db.session.delete(fav_record)
+            # 计算收藏数量
+            response = make_response(jsonify({"status": "success", "msg": "收藏"}))
+            if int(fav_type) == 0:
+                fav_object = Course.query.get_or_404(fav_id)
+                fav_object.fav_nums -= 1
+            elif int(fav_type) == 1:
+                fav_object = CourseOrg.query.get_or_404(fav_id)
+                fav_object.fav_nums -= 1
+            elif int(fav_type) == 2:
+                fav_object = Teacher.query.get_or_404(fav_id)
+                fav_object.fav_nums -= 1
+            db.session.add(fav_object)
+        else:
+            user_fav = UserFavorite(fav_id=fav_id, fav_type=fav_type, user_id=current_user.id)
+            db.session.add(user_fav)
+            if int(fav_type) == 0:
+                fav_object = Course.query.get_or_404(fav_id)
+                fav_object.fav_nums += 1
+            elif int(fav_type) == 1:
+                fav_object = CourseOrg.query.get_or_404(fav_id)
+                fav_object.fav_nums += 1
+            elif int(fav_type) == 2:
+                fav_object = Teacher.query.get_or_404(fav_id)
+                fav_object.fav_nums += 1
+            db.session.add(fav_object)
+            response = make_response(jsonify({"status": "success", "msg": "已收藏"}))
+        db.session.commit()
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        return response

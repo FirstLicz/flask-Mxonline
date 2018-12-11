@@ -44,13 +44,13 @@
                             <li class="piclist"><span class="pram word4">学习用户：</span>
 
                                 <span class="pic"><img width="40" height="40"
-                                                       src="../media/image/2016/12/default_big_14.png"/></span>
+                                                       src="{{ url_for('static',filename='media/image/2016/12/default_big_14.png') }}"/></span>
 
                             </li>
                         </ul>
                         <div class="btns">
                             <div class="btn colectgroupbtn" id="jsLeftBtn">
-                                收藏
+                                {% if course_has_fav %}已收藏{% else %}收藏{% endif %}
                             </div>
                             <div class="buy btn"><a style="color: white" href="{{ url_for('courses.course_section',course_id=course.id) }}">开始学习</a></div>
                         </div>
@@ -77,29 +77,29 @@
                         <p>世界名校，课程权威</p>
                     </div>
                     <div class="pic">
-                        <a href="/company/14/">
-                            <img width="150" height="80" src="../media/org/2016/11/bjdx.jpg"/>
+                        <a href="{{ url_for('org.org_detail_page',org_id=course.courseorg.id) }}">
+                            <img width="150" height="80" src="{{ url_for('static',filename=course.courseorg.image) }}"/>
                         </a>
                     </div>
-                    <a href="/company/14/">
-                        <h2 class="center" title="清华大学">北京大学</h2>
+                    <a href="{{ url_for('org.org_detail_page',org_id=course.courseorg.id) }}">
+                        <h2 class="center" title="{{ course.courseorg.name }}">{{ course.courseorg.name }}</h2>
                     </a>
                     <div class="btn  notlogin
 					     " data-favid="14" id="jsRightBtn">
-                        已收藏
+                        {% if org_has_fav %}已收藏{% else %}收藏{% endif %}
                     </div>
                     <div class="clear">
                         <ul>
                             <li>
-                                <span>课 &nbsp;程&nbsp; 数：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   5</span>
+                                <span>课 &nbsp;程&nbsp; 数：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   {{ course.courseorg.courses|length }}</span>
                             </li>
                             <li>
-                                <span>教 &nbsp;师&nbsp; 数：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  0</span>
+                                <span>教 &nbsp;师&nbsp; 数：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {{ course.courseorg.teachers|length }}</span>
                             </li>
-                            <li>所在地区：&nbsp;&nbsp;北京市</li>
+                            <li>所在地区：&nbsp;&nbsp;{{ course.courseorg.address }}</li>
                             <li>认&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;证&nbsp;:
                                 &nbsp;&nbsp;
-                                <img title="金牌机构" , src="../images/gold.png"/>
+                                <img title="金牌机构" , src="{{ url_for('static',filename='images/gold.png') }}"/>
                             </li>
                         </ul>
                     </div>
@@ -136,11 +136,11 @@
                         <dt>
                             <a target="_blank" href="">
                                 <img width="240" height="220" class="scrollLoading"
-                                     src="../media/courses/2016/11/540e57300001d6d906000338-240-135_mvvGYHL.jpg"/>
+                                     src=""/>
                             </a>
                         </dt>
                         <dd>
-                            <a target="_blank" href=""><h2> django实战项目</h2></a>
+                            <a target="_blank" href=""><h2></h2></a>
                             <span class="fl">学习时长：<i class="key">0</i></span>
                         </dd>
                     </dl>
@@ -159,16 +159,16 @@
             $.ajax({
                 cache: false,
                 type: "POST",
-                url: "/org/add_fav/",
+                url: "{{ url_for('users.add_user_collect') }}",
                 data: {'fav_id': fav_id, 'fav_type': fav_type},
                 async: true,
                 beforeSend: function (xhr, settings) {
                     xhr.setRequestHeader("X-CSRFToken", "5I2SlleZJOMUX9QbwYLUIAOshdrdpRcy");
                 },
                 success: function (data) {
-                    if (data.status == 'fail') {
+                    if (data.status == 'failed') {
                         if (data.msg == '用户未登录') {
-                            window.location.href = "login.html";
+                            window.location.href = "{{ url_for('auth.login') }}";
                         } else {
                             alert(data.msg)
                         }
@@ -182,13 +182,13 @@
 
         $(document).ready(function () {
             $('#jsLeftBtn').on('click', function () {
-                add_fav($(this), 10, 1);
+                add_fav($(this), {{ course.id }}, 0);
             });
         });
 
         $(document).ready(function () {
             $('#jsRightBtn').on('click', function () {
-                add_fav($(this), 2, 2);
+                add_fav($(this), {{ course.courseorg.id }}, 1);
             });
         });
 

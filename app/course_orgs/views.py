@@ -3,7 +3,7 @@ from flask_login import login_user, logout_user, current_user, login_required
 from flask import current_app
 
 from . import org
-from ..models import CourseOrg, CityDict, Course, Teacher
+from ..models import CourseOrg, CityDict, Course, Teacher, UserFavorite
 
 
 @org.route('/list/')
@@ -46,11 +46,13 @@ def org_home_page(org_id):
     organization = CourseOrg.query.get_or_404(int(org_id))
     courses = organization.courses[:4]
     teachers = organization.teachers[:3]
+    has_fav = UserFavorite.query.filter_by(fav_type=1, fav_id=organization.id, user_id=current_user.id).first()
     return render_template(
         'org/org-detail-homepage.html',
         organization=organization,
         courses=courses,
         teachers=teachers,
+        has_fav=has_fav,
     )
 
 
@@ -124,11 +126,14 @@ def teacher_detail(teacher_id):
     pagination = Course.query.filter_by(teacher_id=teacher_id).paginate(page, per_page=8, error_out=False)
     course_org = CourseOrg.query.get_or_404(teacher.course_org_id)
     org_teachers = Teacher.query.filter_by(course_org_id=teacher.course_org_id).order_by(Teacher.hits.desc())[:5]
-    print(org_teachers[0].courseorg)
+    org_has_fav = UserFavorite.query.filter_by(fav_type=1, fav_id=teacher.courseorg.id, user_id=current_user.id).first()
+    teacher_has_fav = UserFavorite.query.filter_by(fav_type=2, fav_id=teacher.id, user_id=current_user.id).first()
     return render_template(
         'org/teacher-detail.html',
         teacher=teacher,
         pagination=pagination,
         course_org=course_org,
         org_teachers=org_teachers,
+        org_has_fav=org_has_fav,
+        teacher_has_fav=teacher_has_fav,
     )

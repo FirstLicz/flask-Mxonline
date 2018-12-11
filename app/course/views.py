@@ -3,7 +3,7 @@ from flask_login import login_user, logout_user, current_user, login_required
 from flask import current_app
 
 from . import courses
-from ..models import Course, Lesson, Video, db
+from ..models import Course, Lesson, Video, db, UserFavorite
 
 
 @courses.route('/list/')
@@ -36,9 +36,13 @@ def course_detail(course_id):
         current_user.courses.append(course)
         db.session.add(current_user)
         db.session.commit()
+    course_has_fav = UserFavorite.query.filter_by(fav_type=0, fav_id=course.id, user_id=current_user.id).first()
+    org_has_fav = UserFavorite.query.filter_by(fav_type=1, fav_id=course.courseorg_id, user_id=current_user.id).first()
     return render_template(
         'course/course-detail.html',
         course=course,
+        course_has_fav=course_has_fav,
+        org_has_fav=org_has_fav,
     )
 
 
