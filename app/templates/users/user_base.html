@@ -84,7 +84,7 @@
         <ul>
             <li class="{% if request.endpoint=='users.user_info' %}active2{% endif %}"><a href="{{ url_for('users.user_info') }}">个人资料</a></li>
             <li class="{% if request.endpoint=='users.user_courses' %}active2{% endif %}"><a href="{{ url_for('users.user_courses') }}">我的课程</a></li>
-            <li class="{% if request.endpoint=='users.user_collects' %}active2{% endif %}"><a href="{{ url_for('users.user_collects') }}">我的收藏</a></li>
+            <li class="{% if request.endpoint|slicer(":19")=='users.user_collects' %}active2{% endif %}"><a href="{{ url_for('users.user_collects_orgs') }}">我的收藏</a></li>
             <li class="{% if request.endpoint=='users.user_messages' %}active2{% endif %}">
                 <a href="{{ url_for('users.user_messages') }}" style="position: relative;">我的消息</a>
             </li>
