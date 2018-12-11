@@ -163,7 +163,7 @@
                 data: {'fav_id': fav_id, 'fav_type': fav_type},
                 async: true,
                 beforeSend: function (xhr, settings) {
-                    xhr.setRequestHeader("X-CSRFToken", "5I2SlleZJOMUX9QbwYLUIAOshdrdpRcy");
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token() }}");
                 },
                 success: function (data) {
                     if (data.status == 'failed') {

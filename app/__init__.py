@@ -6,6 +6,7 @@ from flask_bootstrap import Bootstrap
 from flask_admin import Admin
 from flask_babelex import Babel
 from flask_ckeditor import CKEditor
+from flask_wtf.csrf import CSRFProtect
 
 from config import config
 from .template_filters import do_format_date, do_slicer, diff_time_year
@@ -17,6 +18,7 @@ admin = Admin(template_mode='bootstrap3', name='Flask-admin')
 babel = Babel()
 editor = CKEditor()
 login_manager = LoginManager()
+csrf_protect = CSRFProtect()
 
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'
@@ -62,6 +64,7 @@ def create_app(config_name):
     babel.init_app(app)
     editor.init_app(app)
     login_manager.init_app(app)
+    csrf_protect.init_app(app)
 
     app.add_template_filter(do_format_date, 'datetime')  # 注册到app模板过滤器
     app.add_template_filter(do_slicer, 'slicer')  # 注册到app模板过滤器
