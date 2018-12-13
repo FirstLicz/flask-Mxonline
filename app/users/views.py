@@ -5,7 +5,7 @@ from flask import current_app
 from . import users
 from ..models import User, Course, UserFavorite, Teacher, CourseOrg, db, EmailVerifyCode
 from ..utils.utils import Pagination, random_verify_code
-from .forms import UserInfoForm, UpdateEmailForm
+from .forms import UserInfoForm, UpdateEmailForm, UpdatePassword
 from ..email import send_verify_code
 
 
@@ -153,9 +153,16 @@ def add_user_collect():
         return response
 
 
-@users.route('')
-def modify_user_password():
-    pass
+@users.route('/update_password/', methods=['POST'])
+def update_user_password():
+    form = UpdatePassword()
+    if form.validate_on_submit():
+        form.save()
+        response = make_response(jsonify({"status": "success"}))
+    else:
+        response = make_response(jsonify({"status": "failed", "msg": form.errors.get('password1')}))
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
 
 
 @users.route('/update_email/', methods=['POST'])

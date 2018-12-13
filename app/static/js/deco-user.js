@@ -86,7 +86,7 @@ $(function(){
             cache: false,
             type: "POST",
             dataType:'json',
-            url:"/users/update/pwd/",
+            url:"/user/update_password/",
             data:$('#jsResetPwdForm').serialize(),
             async: true,
             success: function(data) {

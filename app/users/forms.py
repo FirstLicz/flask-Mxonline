@@ -65,3 +65,13 @@ class UpdateEmailForm(FlaskForm):
             current_user.email = self.email.data
             db.session.add(current_user)
             db.session.commit()
+
+
+class UpdatePassword(FlaskForm):
+    password1 = PasswordField('新密码', validators=[DataRequired(), EqualTo('password2', "两次密码不一致")])
+    password2 = PasswordField('确认新密码', validators=[DataRequired()])
+
+    def save(self):
+        current_user.password = self.password1.data
+        db.session.add(current_user)
+        db.session.commit()
