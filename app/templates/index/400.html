@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>404</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/reset.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/animate.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/style.css') }}">
+	<script type="text/javascript" src="{{ url_for('static',filename='js/jquery.min.js') }}"></script>
+</head>
+<body class="bg404 errorpage">
+<section>
+	<div class="wp">
+		<div class="cont">
+			<img src="{{ url_for('static',filename='images/pic404.png') }}"/>
+			<br/><br/><br/><br/>
+			<p>wow~CSRF令牌缺失~</p>
+			<br/>
+			<span>Wow~ CSRF Card is missing ~</span>
+		</div>
+	</div>
+</section>
+</body>
+</html>

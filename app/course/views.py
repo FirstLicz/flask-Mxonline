@@ -38,6 +38,8 @@ def course_detail(course_id):
         db.session.commit()
     course_has_fav = UserFavorite.query.filter_by(fav_type=0, fav_id=course.id, user_id=current_user.id).first()
     org_has_fav = UserFavorite.query.filter_by(fav_type=1, fav_id=course.courseorg_id, user_id=current_user.id).first()
+    # 相关课程推荐
+    # recommend_courses = Course.query.filter_by(recommend=True,)
     return render_template(
         'course/course-detail.html',
         course=course,
@@ -47,6 +49,7 @@ def course_detail(course_id):
 
 
 @courses.route('/section/<int:course_id>')
+@login_required
 def course_section(course_id):
     course = Course.query.get_or_404(int(course_id))
     return render_template(
@@ -55,11 +58,13 @@ def course_section(course_id):
     )
 
 
-@courses.route('/video/<int:video_id>')
+@courses.route('/section/<int:course_id>/video/<int:video_id>')
 @login_required
-def course_video(video_id):
+def course_video(course_id, video_id):
+    course = Course.query.get_or_404(int(course_id))
     videos = Video.query.get_or_404(int(video_id))
     return render_template(
         'course/course-play.html',
         videos=videos,
+        course=course,
     )

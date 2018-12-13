@@ -1,4 +1,6 @@
 from math import ceil
+from string import ascii_letters
+import random
 
 
 def createsuperuser():
@@ -106,12 +108,14 @@ class Pagination(object):
         return data
 
 
-if __name__ == "__main__":
-    from app.models import User
+def random_verify_code(code_length=8):
+    seed_source = ascii_letters + '0123456789'
+    result = ""
+    for num in range(code_length):
+        index = random.randint(0, len(seed_source) - 1)
+        result += seed_source[index]
+    return result
 
-    user = User.query.get_or_404(2)
-    print(user)
-    total_courses = user.courses
-    print(total_courses)
-    a = Pagination(page=2, per_page=8, items=total_courses)
-    print(a.get_items)
+
+if __name__ == "__main__":
+    print(random_verify_code())

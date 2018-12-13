@@ -58,6 +58,7 @@
 
         <div class="info-bar clearfix">
             <div class="content-wrap clearfix">
+                {% block play_video %}
                 <div class="content">
                     <div class="mod-tab-menu">
                         <ul class="course-menu clearfix">
@@ -80,7 +81,9 @@
                             <ul class="video">
                                 {% for video in lesson.videos %}
                                 <li>
-                                    <a target="_blank" href='/video/3662' class="J-media-item studyvideo">{{ video.name }}
+                                    <a target="_blank"
+                                       href='{{ url_for('courses.course_video',video_id=video.id,course_id=course.id) }}'
+                                       class="J-media-item studyvideo">{{ video.name }}
                                         <i class="study-state"></i>
                                     </a>
                                 </li>
@@ -91,6 +94,7 @@
                     </div>
 
                 </div>
+                {% endblock %}
                 <div class="aside r">
                     <div class="bd">
 

@@ -215,7 +215,7 @@ class UserFavorite(db.Model):
     __tablename__ = 'user_favorites'
     FAV_TYPES = (
         ('0', '课程'),
-        ('1', '机构',),
+        ('1', '机构'),
         ('2', '讲师'),
     )
     id = db.Column(db.Integer, primary_key=True, unique=True, nullable=False, autoincrement=True)

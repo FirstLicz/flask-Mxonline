@@ -3,13 +3,24 @@ from flask_login import login_user, logout_user, current_user, login_required
 from flask import current_app
 
 from . import users
-from ..models import User, Course, UserFavorite, Teacher, CourseOrg, db
-from ..utils.utils import Pagination
+from ..models import User, Course, UserFavorite, Teacher, CourseOrg, db, EmailVerifyCode
+from ..utils.utils import Pagination, random_verify_code
+from .forms import UserInfoForm, UpdateEmailForm
+from ..email import send_verify_code
 
 
-@users.route('/info/')
+@users.route('/info/', methods=['GET', 'POST'])
 @login_required
 def user_info():
+    form = UserInfoForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            response = make_response(jsonify({"status": "success"}))
+            form.save()
+        else:
+            response = make_response(jsonify({"status": "failure", "msg": form.errors}))
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        return response
     return render_template(
         'users/usercenter-info.html',
     )
@@ -38,7 +49,7 @@ def user_collects_orgs():  # 我收藏的机构
     fav_list = []
     if user_favorites:
         for elem in user_favorites:
-            query_object = CourseOrg.query.get_or_404(elem)
+            query_object = CourseOrg.query.get_or_404(elem.fav_id)
             fav_list.append(query_object)
     pagination = Pagination(page=page, per_page=6, items=fav_list)
     return render_template(
@@ -58,7 +69,7 @@ def user_collects_teachers():  # 我收藏的讲师
     fav_list = []
     if user_favorites:
         for elem in user_favorites:
-            query_object = Teacher.query.get_or_404(elem)
+            query_object = Teacher.query.get_or_404(elem.fav_id)
             fav_list.append(query_object)
     pagination = Pagination(page=page, per_page=6, items=fav_list)
     return render_template(
@@ -77,7 +88,7 @@ def user_collects_courses():  # 我收藏的课程
     fav_list = []
     if user_favorites:
         for elem in user_favorites:
-            query_object = Course.query.get_or_404(elem)
+            query_object = Course.query.get_or_404(elem.fav_id)
             fav_list.append(query_object)
     pagination = Pagination(page=page, per_page=6, items=fav_list)
     return render_template(
@@ -140,3 +151,44 @@ def add_user_collect():
         db.session.commit()
         response.headers['Access-Control-Allow-Origin'] = '*'
         return response
+
+
+@users.route('')
+def modify_user_password():
+    pass
+
+
+@users.route('/update_email/', methods=['POST'])
+def update_user_email():
+    form = UpdateEmailForm()
+    if form.validate_on_submit():
+        form.save()
+        response = make_response(jsonify({"status": "success", "msg": "已收藏"}))
+    else:
+        response = make_response(jsonify({"email": form.errors}))
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
+
+
+@users.route('/send_email_code/')
+def send_email_code():
+    email = request.args.get('email', type=str)
+    print(email)
+    result = User.query.filter_by(email=email).first()
+    if result:
+        response = make_response(jsonify({'email': '邮箱已存在'}))
+    else:
+        templates = dict()
+        code = random_verify_code()
+        templates['code'] = code
+        templates['username'] = current_user.username
+        send_verify_code(email, '修改邮箱', templates, send_type='update_email')
+        record = EmailVerifyCode()
+        record.email = email
+        record.code = code
+        record.code_type = '2'
+        db.session.add(record)
+        db.session.commit()
+        response = make_response(jsonify({'status': 'success'}))
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response

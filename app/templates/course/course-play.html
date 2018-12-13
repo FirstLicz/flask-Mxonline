@@ -15,12 +15,14 @@
 <!--crumbs start-->
 {% block comment %}
     {{ super() }}
-    <div style="width:1200px;height:675px; margin-left: 340px">
+    {% block play_video %}
+    <div style="width:1200px;height:675px; margin-left: 0px">
         <video id="example_video_1" class="video-js vjs-default-skin" controls preload="none" width="1200"
                poster="http://video-js.zencoder.com/oceans-clip.png"
                data-setup="{}">
-            <source src="http://of66as8gb.bkt.clouddn.com/12.2%20xss%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86%E5%8F%8A%E9%98%B2%E8%8C%83.mp4"
+            <source src="{{ url_for('static',filename=videos.path) }}"
                     type='video/mp4'>
         </video>
     </div>
+    {% endblock %}
 {% endblock %}
