@@ -153,6 +153,18 @@ def add_user_collect():
         return response
 
 
+@users.route('/update_head_icon/', methods=['POST'])
+def update_head_icon():
+    form = UpdatePassword()
+    if form.validate_on_submit():
+        form.save()
+        response = make_response(jsonify({"status": "success"}))
+    else:
+        response = make_response(jsonify({"status": "failed", "msg": form.errors.get('password1')}))
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
+
+
 @users.route('/update_password/', methods=['POST'])
 def update_user_password():
     form = UpdatePassword()
@@ -180,7 +192,10 @@ def update_user_email():
 @users.route('/send_email_code/')
 def send_email_code():
     email = request.args.get('email', type=str)
-    print(email)
+    if email is None:
+        response = make_response(jsonify({'email': '邮箱不能为空'}))
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        return response
     result = User.query.filter_by(email=email).first()
     if result:
         response = make_response(jsonify({'email': '邮箱已存在'}))
