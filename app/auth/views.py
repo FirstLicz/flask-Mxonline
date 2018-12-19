@@ -4,7 +4,7 @@ from io import BytesIO
 
 from .forms import LoginForm, RegisterForm, ForgetPasswordForm, ModifyPasswordForm
 from . import auth
-from ..models import User
+from ..models import User, UserMessage
 from ..utils.captcha import CaptchaImage
 from app import db
 from ..email import send_email
@@ -45,6 +45,9 @@ def register():
         templates['url'] = url_for('auth.confirmed', token_id=token, _external=True)
         templates['username'] = user.username
         send_email(user.email, '注册账号', templates)
+        user_message = UserMessage(user_id=user.id, message="注册成功，欢迎加入教学网")
+        db.session.add(user_message)
+        db.session.commit()
         return redirect(url_for('auth.login'))
     return render_template('auth/register.html', form=form)
 
@@ -122,6 +125,9 @@ def reset_password(token_id):
         db.session.add(u)
         db.session.commit()
         flag = True
+        user_message = UserMessage(user_id=u.id, message="密码重置成功")
+        db.session.add(user_message)
+        db.session.commit()
     return render_template('auth/password_reset.html', form=form, token=token_id, flag=flag)
 
 
