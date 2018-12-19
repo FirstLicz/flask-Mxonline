@@ -257,7 +257,6 @@
     $('.jsDeleteFav_course').on('click', function () {
         var _this = $(this),
             favid = _this.attr('data-favid');
-        alert(favid)
         $.ajax({
             cache: false,
             type: "POST",
