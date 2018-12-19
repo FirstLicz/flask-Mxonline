@@ -49,7 +49,7 @@
                                     <img src="{{ url_for('static',filename='images/gold.png') }}"/>
 
                                 </div>
-                                <span class="c8 clear">{{ elem.address }}</span>
+                                <span class="c8 clear">{% if elem.address %}{{ elem.address }}{% else %}{% endif %}</span>
                                 <div class="delete jsDeleteFav_org" data-favid="{{ elem.id }}"></div>
                             </dd>
                         </dl>

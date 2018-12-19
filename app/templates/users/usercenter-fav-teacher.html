@@ -20,8 +20,8 @@
                     <li class="c7">课程数：<span>{{ elem.courses|length }}</span></li>
                 </ul>
                 <ul class="cont clearfix">
-                    <li class="time">工作公司：<span>{{ elem.work_company }}</span></li>
-                    <li class="c7">公司职位：<span>{{ elem.work_position }}</span></li>
+                    <li class="time">工作公司：<span>{% if elem.work_company %}{{ elem.work_company }}{% else %}暂无信息{% endif %}</span></li>
+                    <li class="c7">公司职位：<span>{% if elem.work_position %}{{ elem.work_position }}{% else %}暂无信息{% endif %}</span></li>
                 </ul>
             </dd>
             <div class="delete jsDeleteFav_teacher" data-favid="{{ elem.id }}"></div>

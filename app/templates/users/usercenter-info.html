@@ -49,8 +49,10 @@
                             <i class="error-tips"></i>
 						</li>
 						<li>性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：
-							<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio"  name="gender" value="0" >男</label>
-							<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="gender" value="1" checked="checked">女</label>
+                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="gender" value="0"
+                                                                        {% if current_user.gender=='0' %}checked="checked"{% else %}{% endif %}>男</label>
+                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="gender" value="1"
+                                                                              {% if current_user.gender=='1' %}checked="checked"{% else %}{% endif %}>女</label>
 						</li>
 						<li class="p_infor_city">地&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;址：
                             <input type="text" name="address" id="address" placeholder="请输入你的地址"

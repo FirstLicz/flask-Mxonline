@@ -51,7 +51,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <a href="usercenter-message.html">
+                            <a href="{{ url_for('users.user_messages') }}">
                                 <div class="msg-num"><span id="MsgNum">0</span></div>
                             </a>
                         {% else %}
@@ -253,68 +253,76 @@
 <script src="{{ url_for('static',filename='js/deco-user.js') }}"></script>
 
 <script type="text/javascript">
-    $(document).ready(function() {
-        $('.jsDeleteFav_course').on('click', function () {
-            var _this = $(this),
-                favid = _this.attr('data-favid');
-            alert(favid)
-            $.ajax({
-                cache: false,
-                type: "POST",
-                url: "/org/add_fav/",
-                data: {
-                    fav_type: 1,
-                    fav_id: favid,
-                    csrfmiddlewaretoken: '799Y6iPeEDNSGvrTu3noBrO4MBLv6enY'
-                },
-                async: true,
-                success: function (data) {
-                    Dml.fun.winReload();
-                }
-            });
-        });
-    });
-    $(document).ready(function() {
-        $('.jsDeleteFav_teacher').on('click', function () {
-            var _this = $(this),
-                favid = _this.attr('data-favid');
-            $.ajax({
-                cache: false,
-                type: "POST",
-                url: "/org/add_fav/",
-                data: {
-                    fav_type: 3,
-                    fav_id: favid,
-                    csrfmiddlewaretoken: '799Y6iPeEDNSGvrTu3noBrO4MBLv6enY'
-                },
-                async: true,
-                success: function (data) {
-                    Dml.fun.winReload();
-                }
-            });
+
+    $('.jsDeleteFav_course').on('click', function () {
+        var _this = $(this),
+            favid = _this.attr('data-favid');
+        alert(favid)
+        $.ajax({
+            cache: false,
+            type: "POST",
+            url: "{{ url_for('users.add_user_collect') }}",
+            data: {
+                fav_type: 0,
+                fav_id: favid,
+                csrfmiddlewaretoken: '{{ csrf_token() }}'
+            },
+            async: true,
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token() }}");
+            },
+            success: function (data) {
+                Dml.fun.winReload();
+            }
         });
     });
 
-    $(document).ready(function() {
-        $('.jsDeleteFav_org').on('click', function () {
-            var _this = $(this),
-                favid = _this.attr('data-favid');
-            $.ajax({
-                cache: false,
-                type: "POST",
-                url: "/org/add_fav/",
-                data: {
-                    fav_type: 2,
-                    fav_id: favid,
-                    csrfmiddlewaretoken: '799Y6iPeEDNSGvrTu3noBrO4MBLv6enY'
-                },
-                async: true,
-                success: function (data) {
-                    Dml.fun.winReload();
-                }
-            });
+
+    $('.jsDeleteFav_teacher').on('click', function () {
+        var _this = $(this),
+            favid = _this.attr('data-favid');
+        $.ajax({
+            cache: false,
+            type: "POST",
+            url: "{{ url_for('users.add_user_collect') }}",
+            data: {
+                fav_type: 2,
+                fav_id: favid,
+                csrfmiddlewaretoken: '{{ csrf_token() }}'
+            },
+            async: true,
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token() }}");
+            },
+            success: function (data) {
+                Dml.fun.winReload();
+            }
         });
     });
+
+
+    $('.jsDeleteFav_org').on('click', function () {
+        var _this = $(this),
+            favid = _this.attr('data-favid');
+        $.ajax({
+            cache: false,
+            type: "POST",
+            url: "{{ url_for('users.add_user_collect') }}",
+            data: {
+                fav_type: 1,
+                fav_id: favid,
+                csrfmiddlewaretoken: '{{ csrf_token() }}'
+            },
+            async: true,
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token() }}");
+            },
+            success: function (data) {
+                Dml.fun.winReload();
+            }
+        });
+    });
+
 </script>
 
 

@@ -13,6 +13,7 @@ from config import basedir
 
 static_dir = os.path.join(basedir, 'app', 'static')
 
+
 @users.route('/info/', methods=['GET', 'POST'])
 @login_required
 def user_info():
@@ -104,8 +105,16 @@ def user_collects_courses():  # 我收藏的课程
 @users.route('/messages/')
 @login_required
 def user_messages():
+    page = request.args.get('page', 1, type=int)
+    messages = current_user.messages
+    pagination = Pagination(page=page, per_page=8, items=messages)
+    for message in pagination.get_items:
+        message.has_read = True
+        db.session.add(message)
+    db.session.commit()
     return render_template(
-        'users/usercenter-mycourse.html',
+        'users/usercenter-message.html',
+        pagination=pagination,
     )
 
 
