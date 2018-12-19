@@ -158,6 +158,11 @@ class User(UserMixin, db.Model):
             return False
         return result[result.find('@') + 1:]
 
+    @property
+    def unread_nums(self):
+        nums = UserMessage.query.filter_by(user_id=self.id, has_read=False).count()
+        return nums
+
     def __repr__(self):
         return "<User,%s>" % self.username
 
