@@ -1,13 +1,17 @@
 from flask import render_template, redirect, url_for, make_response, session, request, Response, jsonify
 from flask_login import login_user, logout_user, current_user, login_required
 from flask import current_app
+from werkzeug.utils import secure_filename
+import os
 
 from . import users
 from ..models import User, Course, UserFavorite, Teacher, CourseOrg, db, EmailVerifyCode
 from ..utils.utils import Pagination, random_verify_code
-from .forms import UserInfoForm, UpdateEmailForm, UpdatePassword
+from .forms import UserInfoForm, UpdateEmailForm, UpdatePassword, UpdateHeadIcon
 from ..email import send_verify_code
+from config import basedir
 
+static_dir = os.path.join(basedir, 'app', 'static')
 
 @users.route('/info/', methods=['GET', 'POST'])
 @login_required
@@ -106,6 +110,7 @@ def user_messages():
 
 
 @users.route('/add_collect/', methods=['POST', ])
+@login_required
 def add_user_collect():
     """
         ('0', '课程'),
@@ -154,18 +159,29 @@ def add_user_collect():
 
 
 @users.route('/update_head_icon/', methods=['POST'])
+@login_required
 def update_head_icon():
-    form = UpdatePassword()
+    form = UpdateHeadIcon()
     if form.validate_on_submit():
-        form.save()
+        f = form.image.data
+        filename = secure_filename(f.filename)
+        upload_dir = os.path.join(static_dir, 'media/uploadFile/user', str(current_user.id))
+        print(upload_dir)
+        if not os.path.isdir(upload_dir):
+            os.makedirs(upload_dir)
+        f.save(os.path.join(upload_dir, filename))
+        current_user.image = 'media/uploadFile/user' + '/' + str(current_user.id) + '/' + filename
+        db.session.add(current_user)
+        db.session.commit()
         response = make_response(jsonify({"status": "success"}))
     else:
-        response = make_response(jsonify({"status": "failed", "msg": form.errors.get('password1')}))
+        response = make_response(jsonify({"status": "failed", "msg": form.errors.get('image')}))
     response.headers['Access-Control-Allow-Origin'] = '*'
     return response
 
 
 @users.route('/update_password/', methods=['POST'])
+@login_required
 def update_user_password():
     form = UpdatePassword()
     if form.validate_on_submit():
@@ -178,6 +194,7 @@ def update_user_password():
 
 
 @users.route('/update_email/', methods=['POST'])
+@login_required
 def update_user_email():
     form = UpdateEmailForm()
     if form.validate_on_submit():
@@ -190,6 +207,7 @@ def update_user_email():
 
 
 @users.route('/send_email_code/')
+@login_required
 def send_email_code():
     email = request.args.get('email', type=str)
     if email is None:

@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms.validators import DataRequired, Email, ValidationError, Length, EqualTo
 from wtforms import StringField, SubmitField, PasswordField, BooleanField, DateField
+from flask_wtf.file import FileField, FileAllowed, FileRequired
 from flask_login import current_user
 from datetime import datetime, timedelta
 
@@ -75,3 +76,8 @@ class UpdatePassword(FlaskForm):
         current_user.password = self.password1.data
         db.session.add(current_user)
         db.session.commit()
+
+
+class UpdateHeadIcon(FlaskForm):
+    image = FileField('头像', validators=[FileRequired()])
+
