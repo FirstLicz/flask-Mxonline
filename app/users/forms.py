@@ -14,7 +14,7 @@ class UserInfoForm(FlaskForm):
     address = StringField('用户地址', validators=[], render_kw={"placeholder": "请输入你的地址"})
     email = StringField('用户邮箱', validators=[Email()], )
     mobile = StringField('手机号码', validators=[DataRequired()], )
-    gender = BooleanField('性别', validators=[DataRequired()], )
+    gender = StringField('性别', validators=[DataRequired()], )
     birthday = DateField('生日日期', validators=[DataRequired()], )
     submit = SubmitField('保存')
 
