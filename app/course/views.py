@@ -36,8 +36,12 @@ def course_detail(course_id):
         current_user.courses.append(course)
         db.session.add(current_user)
         db.session.commit()
-    course_has_fav = UserFavorite.query.filter_by(fav_type=0, fav_id=course.id, user_id=current_user.id).first()
-    org_has_fav = UserFavorite.query.filter_by(fav_type=1, fav_id=course.courseorg_id, user_id=current_user.id).first()
+    if current_user.is_anonymous:
+        course_has_fav = False
+        org_has_fav = False
+    else:
+        course_has_fav = UserFavorite.query.filter_by(fav_type=0, fav_id=course.id, user_id=current_user.id).first()
+        org_has_fav = UserFavorite.query.filter_by(fav_type=1, fav_id=course.courseorg_id, user_id=current_user.id).first()
     # 相关课程推荐
     # recommend_courses = Course.query.filter_by(recommend=True,)
     return render_template(
