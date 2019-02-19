@@ -3,7 +3,7 @@ from wtforms.validators import DataRequired, Email, ValidationError, Length, Equ
 from wtforms import StringField, SubmitField, PasswordField
 from flask import session
 
-from app.models import User
+from app.models import User, Role
 from app import db
 
 
@@ -59,7 +59,8 @@ class RegisterForm(FlaskForm):
         u.username = self.email.data
         u.email = self.email.data
         u.password = self.password.data
-        u.role.name = 'User'
+        role = Role.query.filter_by(name='User').first()
+        u.role = role
         db.session.add(u)
         db.session.commit()
 
@@ -95,4 +96,3 @@ class ModifyPasswordForm(FlaskForm):
         validators=[DataRequired(), Length(6, 20), EqualTo('password', message='两次输入不一致')],
         render_kw={"placeholder": "6-20位非中文字符", "id": "repwd"})
     submit = SubmitField('提交')
-

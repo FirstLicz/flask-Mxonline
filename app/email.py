@@ -21,7 +21,7 @@ def send_email(to, subject, template, **kwargs):
     app = current_app._get_current_object()
     msg = Message(subject=app.config['FLASK_MAIL_SUBJECT_PREFIX'] + subject,
                   sender=app.config['FLASK_MAIL_SENDER'], recipients=[to])
-    msg.html = "<p>%(username)s欢迎加入Flask大家庭！以下是激活链接:%(url)s</p>" % template
+    msg.html = "<p>%(username)s欢迎加入在线教育平台！以下是激活链接:%(url)s</p>" % template
     thr = Thread(target=send_async_email, args=(app, msg))
     thr.start()
     return thr

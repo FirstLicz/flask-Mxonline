@@ -70,7 +70,7 @@ class UserModelView(MyBaseModelView):
 
     # column_exclude_list = ['password_hash', ]
     # column_editable_list = ['password_hash', ]
-    form_excluded_columns = ['messages', 'comments', 'favorites', 'password_hash',]
+    form_excluded_columns = ['messages', 'comments', 'favorites', 'password_hash', ]
     from .models import User
     column_choices = {
         'gender': User.GENDER,
@@ -164,7 +164,7 @@ class CourseModelView(MyBaseModelView):
         'degree': Course.COURSE_GRADE,
     }
 
-    form_excluded_columns = ['lessons', ]
+    form_excluded_columns = ['lessons', 'users']
     form_overrides = dict(
         degree=Select2Field,
         detail=UEditorField,
@@ -172,6 +172,7 @@ class CourseModelView(MyBaseModelView):
     form_args = dict(
         degree=dict(coerce=str, choices=Course.COURSE_GRADE),
     )
+    column_filters = ('add_time', 'name', 'click_nums')
     form_extra_fields = {
         'image': ImageUploadField(
             'Image',

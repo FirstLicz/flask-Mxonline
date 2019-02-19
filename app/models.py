@@ -411,6 +411,7 @@ class Course(db.Model):
     add_time = db.Column(db.DateTime, default=datetime.now, comment='添加时间', doc='添加时间')
     lessons = db.relationship('Lesson', backref='course')
     is_banner = db.Column(db.Boolean, default=False, nullable=False, comment='是否轮播')
+    resources = db.relationship('CourseResource', backref='resources')
 
     @property
     def get_degree(self):

@@ -20,6 +20,8 @@ def login():
         else:
             login_user(user)
             user.update_login_time()
+            if user.role.name == "Administrator":
+                return redirect('/admin')
             return redirect(url_for("index.index"))
         return render_template('auth/login.html', form=form, msg=msg)
     return render_template('auth/login.html', form=form)
@@ -63,7 +65,7 @@ def before_request():
 
 
 @auth.route('/confirm/<token_id>')
-@login_required
+#@login_required
 def confirmed(token_id):
     if current_user.confirmed:  # 如果本身已确认，直接跳首页
         return redirect(url_for('index.index'))

@@ -14,7 +14,7 @@ from .template_filters import do_format_date, do_slicer, diff_time_year
 db = SQLAlchemy()
 mail = Mail()
 bootstrap = Bootstrap()
-admin = Admin(template_mode='bootstrap3', name='Flask-admin')
+admin = Admin(template_mode='bootstrap3', name='在线教育系统后台')
 babel = Babel()
 editor = CKEditor()
 login_manager = LoginManager()
